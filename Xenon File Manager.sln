@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xenon File Manager", "Xenon File Manager\Xenon File Manager.csproj", "{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginUtil", "PluginUtil\PluginUtil.csproj", "{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalFileSystemHandler", "LocalFileSystemHandler\LocalFileSystemHandler.csproj", "{B07876D4-A2DF-4DAB-9609-62F05BACFC02}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}.Debug|x86.Build.0 = Debug|Any CPU
+		{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}.Release|x86.Build.0 = Release|Any CPU
+		{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}.Debug|x86.ActiveCfg = Debug|x86
+		{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}.Debug|x86.Build.0 = Debug|x86
+		{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}.Release|x86.ActiveCfg = Release|x86
+		{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}.Release|x86.Build.0 = Release|x86
+		{B07876D4-A2DF-4DAB-9609-62F05BACFC02}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B07876D4-A2DF-4DAB-9609-62F05BACFC02}.Debug|x86.Build.0 = Debug|Any CPU
+		{B07876D4-A2DF-4DAB-9609-62F05BACFC02}.Release|x86.ActiveCfg = Release|Any CPU
+		{B07876D4-A2DF-4DAB-9609-62F05BACFC02}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Xenon File Manager\Xenon File Manager.csproj
+	EndGlobalSection
+EndGlobal
