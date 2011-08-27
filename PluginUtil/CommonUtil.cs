@@ -12,6 +12,10 @@ namespace Xenon.PluginUtil {
 		public const int HistoryNumItems = 300;
 		public const int HistoryTrimNum = 200;
 		
+		public static string ExecutablePath {
+			get { return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location); }
+		}
+		
 		static CommonUtil() {
 		    switch (Environment.OSVersion.Platform)  {
 			    case PlatformID.Win32NT:
@@ -46,8 +50,7 @@ namespace Xenon.PluginUtil {
 		private static List<FileTypeIconHandler> fileTypeIconHandlers = new List<FileTypeIconHandler>();
 		
 		public static void LoadPlugins() {
-			string location = System.Reflection.Assembly.GetEntryAssembly().Location;
-			DirectoryInfo directory = new DirectoryInfo(Path.Combine(System.IO.Path.GetDirectoryName(location), "plugins"));
+			DirectoryInfo directory = new DirectoryInfo(Path.Combine(ExecutablePath, "plugins"));
 			FileInfo[] files = directory.GetFiles("*.dll");
 			foreach(FileInfo file in files) {
 				string className = Path.GetFileNameWithoutExtension(file.Name);

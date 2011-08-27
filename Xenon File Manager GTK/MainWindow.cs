@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Gtk;
+using Mono.Unix;
 using Xenon.PluginUtil;
 
 namespace Xenon.FileManager.GtkUI {
@@ -10,7 +11,7 @@ namespace Xenon.FileManager.GtkUI {
 			
 			this.IconList = new Gdk.Pixbuf[] { new Gdk.Pixbuf(null, "XenonFileManager.icons.xenon16.png"), new Gdk.Pixbuf(null, "XenonFileManager.icons.xenon256.png") };
 			
-			this.Title = "Xenon File Manager";
+			this.Title = Catalog.GetString("Xenon File Manager");
 			this.SetSizeRequest(600, 450);
 			//this.DefaultWidth = 600;
 			//this.DefaultHeight = 450;
@@ -41,7 +42,7 @@ namespace Xenon.FileManager.GtkUI {
 					toolbar.Insert(new SeparatorToolItem(), 3);
 					toolbar.Insert(homeButton = new ToolButton(Stock.Home), 4);
 					toolbar.Insert(refreshButton = new ToolButton(Gtk.Stock.Refresh), 5);
-					toolbar.Insert(computerButton = new ToolButton(Gtk.Image.NewFromIconName("computer", IconSize.Button), "Computer"), 6);
+					toolbar.Insert(computerButton = new ToolButton(Gtk.Image.NewFromIconName("computer", IconSize.Button), Catalog.GetString("Computer")), 6);
 					computerButton.Sensitive = CommonUtil.CanLoadComputer();
 					toolbar.Insert(new SeparatorToolItem(), 7);
 					toolbar.Insert(cutButton = new ToolButton(Stock.Cut), 8);
@@ -60,7 +61,7 @@ namespace Xenon.FileManager.GtkUI {
 				nb = new Notebook();
 				
 				//nb.AppendPage((Widget)CommonUtil.LoadControlInstance(), new Label(""));
-				nb.AppendPage((Widget)CommonUtil.LoadControlInstance(), new TabLabel("", nb));
+				nb.AppendPage((Widget)CommonUtil.LoadControlInstance(), new TabLabel(string.Empty, nb));
 				vbox1.PackStart(nb, true, true, 0);
 			
 			this.Add(vbox1);
@@ -117,7 +118,7 @@ namespace Xenon.FileManager.GtkUI {
 		
 		
 		protected void OnNewTabActionActivated(object sender, EventArgs e) {
-			int num = nb.AppendPage((Widget)CommonUtil.LoadControlInstance(), new TabLabel("", nb));
+			int num = nb.AppendPage((Widget)CommonUtil.LoadControlInstance(), new TabLabel(string.Empty, nb));
 			nb.ShowAll();
 			CommonUtil.HomeButtonClicked((IDisplayInterfaceControl)nb.GetNthPage(num));
 			nb.CurrentPage = num;

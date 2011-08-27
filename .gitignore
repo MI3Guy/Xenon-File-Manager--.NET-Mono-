@@ -11,3 +11,6 @@ TestResults
 # Monodevelop files
 *.userprefs
 *.pidb
+
+# gettext files
+*.mo
