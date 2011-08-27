@@ -1,7 +1,7 @@
 using System;
 using System.Web;
 
-namespace PluginUtil
+namespace Xenon.PluginUtil
 {
 	public delegate void DirectoryChangedEventHandler(object sender, DirectoryChangedEventArgs e);
 	

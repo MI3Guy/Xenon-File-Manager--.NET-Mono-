@@ -2,7 +2,7 @@ using System;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace XenonFileManagerWinForms {
+namespace Xenon.FileManager.WinForms {
 	public class MainForm : Form {
 		public MainForm() {
 			this.Text = "Xenon File Manager";

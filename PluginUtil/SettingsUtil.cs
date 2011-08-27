@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PluginUtil {
+namespace Xenon.PluginUtil {
 	public static class SettingsUtil {
 		
 		static SettingsUtil() {

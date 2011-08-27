@@ -1,7 +1,7 @@
 using System;
 using System.Xml;
 
-namespace PluginUtil {
+namespace Xenon.PluginUtil {
 	public class PluginInfo {
 		public PluginInfo(string file) {
 			XmlTextReader xmlFile = new XmlTextReader(file); 

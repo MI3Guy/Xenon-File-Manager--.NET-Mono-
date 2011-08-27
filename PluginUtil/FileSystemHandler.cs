@@ -1,6 +1,6 @@
 using System;
 
-namespace PluginUtil {
+namespace Xenon.PluginUtil {
 	public abstract class FileSystemHandler : PluginHandler {
 		public abstract bool HandlesUriType(Uri uri);
 		public abstract Uri Combine(Uri uri, string addition);

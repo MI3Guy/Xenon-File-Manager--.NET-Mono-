@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Gtk;
-using PluginUtil;
-using System.Diagnostics;
-using System.IO;
-namespace ListDisplayInterfaceGtk {
+using Xenon.PluginUtil;
+
+namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 	public class ListDisplayWidget : ScrolledWindow, IDisplayInterfaceControl {
 		public ListDisplayWidget() {
 			historyBack = new CacheStack<Uri>(CommonUtil.HistoryNumItems, CommonUtil.HistoryTrimNum);

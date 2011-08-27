@@ -1,11 +1,11 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using PluginUtil;
+using Xenon.PluginUtil;
 using Gtk;
 
 
-namespace FileTypeIconHandlerUnix {
+namespace Xenon.Plugin.FileTypeIconHandlerUnix {
 	public class FileTypeIconHandlerUnix : FileTypeIconHandler {
 		public override bool DoLoad(PluginUIType ui, PluginOSType os) {
 			return ui == PluginUIType.Gtk && os == PluginOSType.Unix;

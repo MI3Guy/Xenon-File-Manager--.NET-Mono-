@@ -1,6 +1,6 @@
 using System;
 using Gtk;
-using PluginUtil;
+using Xenon.PluginUtil;
 
 namespace ClipboardGtk
 {

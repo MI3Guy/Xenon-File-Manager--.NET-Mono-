@@ -1,13 +1,13 @@
 using System;
 using Gtk;
 
-namespace XenonFileManager {
+namespace Xenon.FileManager.GtkUI {
 	class MainClass {
 		public static void Main(string[] args) {
 			Application.Init();
 			
-			PluginUtil.CommonUtil.UIType = PluginUtil.PluginUIType.Gtk;
-			PluginUtil.CommonUtil.LoadPlugins();
+			Xenon.PluginUtil.CommonUtil.UIType = Xenon.PluginUtil.PluginUIType.Gtk;
+			Xenon.PluginUtil.CommonUtil.LoadPlugins();
 			
 			MainWindow win = new MainWindow();
 			win.Show();

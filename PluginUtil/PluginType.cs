@@ -1,5 +1,5 @@
 using System;
-namespace PluginUtil
+namespace Xenon.PluginUtil
 {
 	public enum PluginType {
 		FileSystem,

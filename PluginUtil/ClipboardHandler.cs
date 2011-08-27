@@ -1,6 +1,6 @@
 using System;
 
-namespace PluginUtil {
+namespace Xenon.PluginUtil {
 	public abstract class ClipboardHandler : PluginHandler {
 		public abstract void InitClipboard(object obj);
 		public abstract void CopyPath(Uri path);

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PluginUtil
+namespace Xenon.PluginUtil
 {
 	public interface IDisplayInterfaceControl {
 		void SetContent(IEnumerable<XeFileInfo> fileList, Uri path);

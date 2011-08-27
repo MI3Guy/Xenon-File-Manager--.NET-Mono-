@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PluginUtil {
+namespace Xenon.PluginUtil {
 	public class CacheStack<T> : List<T> {
 		public CacheStack(int _max, int _cleanupNum) : base(_max) {
 			max = _max;

@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 
 
-namespace PluginUtil {
+namespace Xenon.PluginUtil {
 	public static class CommonUtil {
 		public const int IconCacheMaxSize = 2048;
 		public const int IconCacheTrimSize = 1024;
@@ -53,7 +53,7 @@ namespace PluginUtil {
 				string className = Path.GetFileNameWithoutExtension(file.Name);
 				try {
 					Assembly assembly = Assembly.LoadFrom(file.FullName);
-					Type type = assembly.GetType(className + "." + className);
+					Type type = assembly.GetType("Xenon.Plugin." + className + "." + className);
 					
 					PluginHandler instance = (PluginHandler)Activator.CreateInstance(type);
 					if(!instance.DoLoad(uiType, OSType)) continue;

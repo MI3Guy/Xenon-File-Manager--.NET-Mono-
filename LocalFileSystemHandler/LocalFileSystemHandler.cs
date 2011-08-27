@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Web;
-using PluginUtil;
+using Xenon.PluginUtil;
 
-namespace LocalFileSystemHandler
+namespace Xenon.Plugin.LocalFileSystemHandler
 {
 	public class LocalFileSystemHandler : FileSystemHandler
 	{

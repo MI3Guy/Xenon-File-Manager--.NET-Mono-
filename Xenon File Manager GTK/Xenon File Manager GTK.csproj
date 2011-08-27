@@ -8,7 +8,7 @@
     <ProjectGuid>{E937A710-DF02-40F7-9644-7CE05BFA19C1}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>XenonFileManager</RootNamespace>
-    <StartupObject>XenonFileManager.MainClass</StartupObject>
+    <StartupObject>Xenon.FileManager.GtkUI.MainClass</StartupObject>
     <AssemblyName>Xenon File Manager</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -52,6 +52,7 @@
       <Package>gtk-sharp-2.0</Package>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PluginUtil\PluginUtil.csproj">
@@ -63,6 +64,8 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="MainWindow.cs" />
+    <Compile Include="TabLabel.cs" />
+    <Compile Include="ExtensionMethods.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace PluginUtil
+namespace Xenon.PluginUtil
 {
 	public class XeFileInfo
 	{

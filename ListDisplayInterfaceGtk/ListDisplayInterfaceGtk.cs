@@ -1,7 +1,7 @@
 using System;
-using PluginUtil;
+using Xenon.PluginUtil;
 
-namespace ListDisplayInterfaceGtk {
+namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 	public class ListDisplayInterfaceGtk : DisplayInterfaceHandler {
 		public ListDisplayInterfaceGtk() {
 			

@@ -1,7 +1,7 @@
 using System;
-using PluginUtil;
+using Xenon.PluginUtil;
 
-namespace AboutFileSystemHandler {
+namespace Xenon.Plugin.AboutFileSystemHandler {
 	public class AboutFileSystemHandler : FileSystemHandler {
 		private PluginOSType OS;
 		
