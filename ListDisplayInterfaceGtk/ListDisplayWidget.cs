@@ -2,15 +2,23 @@ using System;
 using System.Collections.Generic;
 using Gtk;
 using PluginUtil;
-
+using System.Diagnostics;
+using System.IO;
 namespace ListDisplayInterfaceGtk {
 	public class ListDisplayWidget : ScrolledWindow, IDisplayInterfaceControl {
 		public ListDisplayWidget() {
-			historyBack = new Stack<Uri>();
-			historyForward = new Stack<Uri>();
+			historyBack = new CacheStack<Uri>(CommonUtil.HistoryNumItems, CommonUtil.HistoryTrimNum);
+			historyForward = new CacheStack<Uri>(CommonUtil.HistoryNumItems, CommonUtil.HistoryTrimNum);
 			
 			mainTreeView = new TreeView();
 				TreeViewColumn col = new TreeViewColumn();
+				col.Title = "";
+				col.Sizing = TreeViewColumnSizing.Autosize;
+				mainTreeView.AppendColumn(col);
+				CellRendererPixbuf iconCell = new CellRendererPixbuf();
+				col.PackStart(iconCell, true);
+				col.SetCellDataFunc(iconCell, new TreeCellDataFunc(RenderIcon));
+				col = new TreeViewColumn();
 				col.Title = "Name";
 				col.Sizing = TreeViewColumnSizing.Autosize;
 				mainTreeView.AppendColumn(col);
@@ -46,8 +54,8 @@ namespace ListDisplayInterfaceGtk {
 		
 		private TreeView mainTreeView;
 		private ListStore listStore;
-		private Stack<Uri> historyBack;
-		private Stack<Uri> historyForward;
+		private CacheStack<Uri> historyBack;
+		private CacheStack<Uri> historyForward;
 		private Uri currentLocation;
 		
 		public void SetContent(IEnumerable<XeFileInfo> fileList, Uri path) {
@@ -58,12 +66,12 @@ namespace ListDisplayInterfaceGtk {
 			CommonUtil.NotifyDirectoryChanged(this, new DirectoryChangedEventArgs(path, this));
 		}
 		
-		public Stack<Uri> HistoryBack {
+		public CacheStack<Uri> HistoryBack {
 			get { return historyBack; }
 			set { historyBack = value; }
 		}
 		
-		public Stack<Uri> HistoryForward {
+		public CacheStack<Uri> HistoryForward {
 			get { return historyForward; }
 			set { historyForward = value; }
 		}
@@ -77,8 +85,37 @@ namespace ListDisplayInterfaceGtk {
 			TreeIter iter;
 			
 			if(!mainTreeView.Model.GetIter(out iter, args.Path)) { return; }
+			XeFileInfo file = (XeFileInfo)mainTreeView.Model.GetValue(iter, 0);
+			if(file.IsFile) return;
 			
-			CommonUtil.LoadDirectory(((XeFileInfo)mainTreeView.Model.GetValue(iter, 0)).FullPath, this);
+			CommonUtil.LoadDirectory(file.FullPath, this);
+		}
+			
+		private void RenderIcon(Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter) {
+			try {
+				XeFileInfo file = (XeFileInfo) model.GetValue(iter, 0);
+				//Console.WriteLine(((Gtk.Image)Image.NewFromIconName("computer", IconSize.Dialog)).StorageType.ToString());
+				Console.WriteLine("HERE2");
+				
+				/*ProcessStartInfo psi = new ProcessStartInfo("xdg-mime", string.Format("query filetype '{0}'", file.FullPath));
+				psi.RedirectStandardOutput = true;
+				psi.UseShellExecute = false;
+				Process p = Process.Start(psi);
+				p.WaitForExit();
+				StreamReader sr = p.StandardOutput;
+				
+				string text = sr.ReadLine();
+				
+				IconSet iconset = new IconSet();
+				IconSource source = new Gtk.IconSource();
+				source.IconName = text.Replace('/', '-'); //"inode-directory";
+				//Console.WriteLine("{0}: {1}", psi.Arguments, text);
+				iconset.AddSource(source);*/
+				
+				(cell as CellRendererPixbuf).Pixbuf = ((IconSet)file.Icon).RenderIcon(new Style(), TextDirection.None, StateType.Normal, IconSize.SmallToolbar, mainTreeView, ""); //iconset.RenderIcon(new Style(), TextDirection.None, StateType.Normal, IconSize.SmallToolbar, mainTreeView, ""); //IconTheme.GetForScreen(this.ParentWindow.Screen) //new Gdk.Pixbuf("icons/xenon16.png"); //((Gtk.Image)Image.NewFromIconName("computer", IconSize.Dialog)).Pixbuf;
+				//Console.WriteLine("HERE");
+			}
+			catch(Exception ex) { Console.WriteLine(ex);}
 		}
 		
 		private void RenderFileName(Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter) {

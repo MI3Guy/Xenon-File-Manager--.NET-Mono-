@@ -4,7 +4,8 @@ namespace PluginUtil
 	public enum PluginType {
 		FileSystem,
 		FileTypeIcon,
-		TabInterface,
+		DisplayInterface,
+		Clipboard,
 		MenuInterface,
 		SidebarInterface,
 		Other

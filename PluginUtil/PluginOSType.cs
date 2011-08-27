@@ -2,8 +2,9 @@ using System;
 namespace PluginUtil
 {
 	public enum PluginOSType {
-		Linux,
-		Windows
+		Unix,
+		Windows,
+		Mac
 	}
 }
 

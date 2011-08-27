@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>PluginUtil</RootNamespace>
     <AssemblyName>PluginUtil</AssemblyName>
+    <BaseDirectory>..\bin\Debug</BaseDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,15 +31,30 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonUtil.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="PluginUIType.cs" />
     <Compile Include="PluginOSType.cs" />
     <Compile Include="PluginType.cs" />
     <Compile Include="FileSystemHandler.cs" />
     <Compile Include="XeFileInfo.cs" />
+    <Compile Include="DirectoryChangedEventArgs.cs" />
+    <Compile Include="DisplayInterfaceHandler.cs" />
+    <Compile Include="PluginHandler.cs" />
+    <Compile Include="IDisplayInterfaceControl.cs" />
+    <Compile Include="TabOpenedEventArgs.cs" />
+    <Compile Include="ClipboardHandler.cs" />
+    <Compile Include="SettingsUtil.cs" />
+    <Compile Include="PluginInfo.cs" />
+    <Compile Include="FileTypeIconHandler.cs" />
+    <Compile Include="CacheStack.cs" />
+    <Compile Include="CacheHash.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="CommonUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

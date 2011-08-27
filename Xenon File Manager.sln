@@ -1,11 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xenon File Manager", "Xenon File Manager\Xenon File Manager.csproj", "{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginUtil", "PluginUtil\PluginUtil.csproj", "{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalFileSystemHandler", "LocalFileSystemHandler\LocalFileSystemHandler.csproj", "{B07876D4-A2DF-4DAB-9609-62F05BACFC02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xenon File Manager GTK", "Xenon File Manager GTK\Xenon File Manager GTK.csproj", "{E937A710-DF02-40F7-9644-7CE05BFA19C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListDisplayInterfaceGtk", "ListDisplayInterfaceGtk\ListDisplayInterfaceGtk.csproj", "{6F16F8DF-8F22-4A35-A0E7-B7D99363FE28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AboutFileSystemHandler", "AboutFileSystemHandler\AboutFileSystemHandler.csproj", "{71D44622-4D31-40F6-A562-C51B92282C72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardGtk", "ClipboardGtk\ClipboardGtk.csproj", "{7424D22D-BB34-4085-BB12-4C1958B4B6C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xenon File Manager WinForms", "Xenon File Manager WinForms\Xenon File Manager WinForms.csproj", "{FD549A73-8CD4-4AA7-A828-3CBF4D3F771B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTypeIconHandlerUnix", "FileTypeIconHandlerLinux\FileTypeIconHandlerUnix.csproj", "{7E35063E-6350-4A1F-8C29-215AC01D14AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,20 +23,40 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F16F8DF-8F22-4A35-A0E7-B7D99363FE28}.Debug|x86.ActiveCfg = Debug|x86
+		{6F16F8DF-8F22-4A35-A0E7-B7D99363FE28}.Debug|x86.Build.0 = Debug|x86
+		{6F16F8DF-8F22-4A35-A0E7-B7D99363FE28}.Release|x86.ActiveCfg = Release|x86
+		{6F16F8DF-8F22-4A35-A0E7-B7D99363FE28}.Release|x86.Build.0 = Release|x86
+		{71D44622-4D31-40F6-A562-C51B92282C72}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{71D44622-4D31-40F6-A562-C51B92282C72}.Debug|x86.Build.0 = Debug|Any CPU
+		{71D44622-4D31-40F6-A562-C51B92282C72}.Release|x86.ActiveCfg = Release|Any CPU
+		{71D44622-4D31-40F6-A562-C51B92282C72}.Release|x86.Build.0 = Release|Any CPU
+		{7424D22D-BB34-4085-BB12-4C1958B4B6C3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7424D22D-BB34-4085-BB12-4C1958B4B6C3}.Debug|x86.Build.0 = Debug|Any CPU
+		{7424D22D-BB34-4085-BB12-4C1958B4B6C3}.Release|x86.ActiveCfg = Release|Any CPU
+		{7424D22D-BB34-4085-BB12-4C1958B4B6C3}.Release|x86.Build.0 = Release|Any CPU
+		{7E35063E-6350-4A1F-8C29-215AC01D14AD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7E35063E-6350-4A1F-8C29-215AC01D14AD}.Debug|x86.Build.0 = Debug|Any CPU
+		{7E35063E-6350-4A1F-8C29-215AC01D14AD}.Release|x86.ActiveCfg = Release|Any CPU
+		{7E35063E-6350-4A1F-8C29-215AC01D14AD}.Release|x86.Build.0 = Release|Any CPU
 		{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}.Debug|x86.Build.0 = Debug|Any CPU
 		{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}.Release|x86.ActiveCfg = Release|Any CPU
 		{7F0C0CB3-DDB3-4724-ADB2-C01882D2CCFD}.Release|x86.Build.0 = Release|Any CPU
-		{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}.Debug|x86.ActiveCfg = Debug|x86
-		{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}.Debug|x86.Build.0 = Debug|x86
-		{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}.Release|x86.ActiveCfg = Release|x86
-		{8EEC7C64-6A2A-48BF-ABB0-A7A671A48BC2}.Release|x86.Build.0 = Release|x86
 		{B07876D4-A2DF-4DAB-9609-62F05BACFC02}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{B07876D4-A2DF-4DAB-9609-62F05BACFC02}.Debug|x86.Build.0 = Debug|Any CPU
 		{B07876D4-A2DF-4DAB-9609-62F05BACFC02}.Release|x86.ActiveCfg = Release|Any CPU
 		{B07876D4-A2DF-4DAB-9609-62F05BACFC02}.Release|x86.Build.0 = Release|Any CPU
+		{E937A710-DF02-40F7-9644-7CE05BFA19C1}.Debug|x86.ActiveCfg = Debug|x86
+		{E937A710-DF02-40F7-9644-7CE05BFA19C1}.Debug|x86.Build.0 = Debug|x86
+		{E937A710-DF02-40F7-9644-7CE05BFA19C1}.Release|x86.ActiveCfg = Release|x86
+		{E937A710-DF02-40F7-9644-7CE05BFA19C1}.Release|x86.Build.0 = Release|x86
+		{FD549A73-8CD4-4AA7-A828-3CBF4D3F771B}.Debug|x86.ActiveCfg = Debug|x86
+		{FD549A73-8CD4-4AA7-A828-3CBF4D3F771B}.Debug|x86.Build.0 = Debug|x86
+		{FD549A73-8CD4-4AA7-A828-3CBF4D3F771B}.Release|x86.ActiveCfg = Release|x86
+		{FD549A73-8CD4-4AA7-A828-3CBF4D3F771B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Xenon File Manager\Xenon File Manager.csproj
+		StartupItem = Xenon File Manager GTK\Xenon File Manager GTK.csproj
 	EndGlobalSection
 EndGlobal
