@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipboardGtk", "ClipboardGt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xenon File Manager WinForms", "Xenon File Manager WinForms\Xenon File Manager WinForms.csproj", "{FD549A73-8CD4-4AA7-A828-3CBF4D3F771B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTypeIconHandlerUnix", "FileTypeIconHandlerLinux\FileTypeIconHandlerUnix.csproj", "{7E35063E-6350-4A1F-8C29-215AC01D14AD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListDisplayInterfaceWinForms", "ListDisplayInterfaceWinForms\ListDisplayInterfaceWinForms.csproj", "{469DD1B2-7481-493E-9DF6-7BEBF63E41A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTypeIconHandlerUnix", "FileTypeIconHandlerUnix\FileTypeIconHandlerUnix.csproj", "{7E35063E-6350-4A1F-8C29-215AC01D14AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -35,16 +35,16 @@
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
-    <Reference Include="Gettext.Cs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libraries\Gettext.Cs.dll</HintPath>
-    </Reference>
     <Reference Include="TabPage, Version=0.0.1.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libraries\TabPage.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <Reference Include="Gettext.Cs">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libraries\Gettext.Cs.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PluginUtil\PluginUtil.csproj">
@@ -56,7 +56,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="MainForm.cs" />
     <Compile Include="XeTabControl.cs" />
-    <Compile Include="NativeToolStripRenderer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
