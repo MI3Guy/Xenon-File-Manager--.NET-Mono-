@@ -1,5 +1,5 @@
 //  
-//  Program.cs
+//  MyClass.cs
 //  
 //  Author:
 //       John Bentley <pcguy49@yahoo.com>
@@ -18,26 +18,17 @@
 // 
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 using System;
-using System.Windows.Forms;
-using System.Reflection;
-using System.Diagnostics;
-using System.IO;
-using Mono.Unix;
 using Xenon.PluginUtil;
 
-namespace Xenon.FileManager.WinForms {
-	public static class Program {
-		public static void Main() {
-			Catalog.Init("xenon", Path.Combine(CommonUtil.ExecutablePath, "locale"));
-			
-			CommonUtil.UIType = PluginUtil.PluginUIType.WinForms;
-			CommonUtil.LoadPlugins();
-			
-			Application.EnableVisualStyles();
-			Application.Run(new MainForm());
-			Process.GetCurrentProcess().Kill();
+namespace Xenon.Plugin.ListDisplayInterfaceWinForms {
+	public class ListDisplayInterfaceWinForms : DisplayInterfaceHandler {
+		public override bool DoLoad (PluginUIType ui, PluginOSType os) {
+			return ui == PluginUIType.WinForms;
+		}
+		
+		public override IDisplayInterfaceControl InitControl() {
+			return new ListDisplayControl();
 		}
 	}
 }

@@ -12,7 +12,8 @@ namespace Xenon.PluginUtil {
 			AllSettings.Add("Main Settings", MainSettings);
 			AllSettings.Add("Plugins", PluginSettings);
 			
-			MainSettings.Add("home", new Uri("file:///home/john"));
+			//MainSettings.Add("home", new Uri("file:///home/john"));
+			MainSettings.Add("home", new Uri(Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
 		}
 		
 		public static Dictionary<string, Dictionary<string, object>> AllSettings;

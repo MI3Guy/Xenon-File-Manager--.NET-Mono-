@@ -17,12 +17,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xenon File Manager WinForms
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileTypeIconHandlerUnix", "FileTypeIconHandlerLinux\FileTypeIconHandlerUnix.csproj", "{7E35063E-6350-4A1F-8C29-215AC01D14AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListDisplayInterfaceWinForms", "ListDisplayInterfaceWinForms\ListDisplayInterfaceWinForms.csproj", "{469DD1B2-7481-493E-9DF6-7BEBF63E41A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{469DD1B2-7481-493E-9DF6-7BEBF63E41A0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{469DD1B2-7481-493E-9DF6-7BEBF63E41A0}.Debug|x86.Build.0 = Debug|Any CPU
+		{469DD1B2-7481-493E-9DF6-7BEBF63E41A0}.Release|x86.ActiveCfg = Release|Any CPU
+		{469DD1B2-7481-493E-9DF6-7BEBF63E41A0}.Release|x86.Build.0 = Release|Any CPU
 		{6F16F8DF-8F22-4A35-A0E7-B7D99363FE28}.Debug|x86.ActiveCfg = Debug|x86
 		{6F16F8DF-8F22-4A35-A0E7-B7D99363FE28}.Debug|x86.Build.0 = Debug|x86
 		{6F16F8DF-8F22-4A35-A0E7-B7D99363FE28}.Release|x86.ActiveCfg = Release|x86
@@ -57,6 +63,12 @@ Global
 		{FD549A73-8CD4-4AA7-A828-3CBF4D3F771B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Xenon File Manager GTK\Xenon File Manager GTK.csproj
+		StartupItem = Xenon File Manager WinForms\Xenon File Manager WinForms.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+		$0.StandardHeader = $2
+		$2.inheritsSet = GPLv3License
 	EndGlobalSection
 EndGlobal

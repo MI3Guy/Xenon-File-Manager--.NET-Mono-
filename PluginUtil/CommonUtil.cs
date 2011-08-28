@@ -79,6 +79,7 @@ namespace Xenon.PluginUtil {
 #endregion
 		
 		public static void NotifyDirectoryChanged(object sender, DirectoryChangedEventArgs e) {
+			bool s = sender == null;
 			DirectoryChanged(sender, e);
 		}
 		
@@ -115,7 +116,7 @@ namespace Xenon.PluginUtil {
 					}
 				}
 			}
-			catch { return null; }
+			catch(Exception ex) { Console.WriteLine(ex); return null; }
 			return null;
 		}
 		
@@ -197,7 +198,7 @@ namespace Xenon.PluginUtil {
 			try {
 				LoadDirectory((Uri)SettingsUtil.MainSettings["home"], control);
 			}
-			catch { }
+			catch(Exception ex) { Console.WriteLine(ex); }
 		}
 		
 		public static bool CanLoadComputer() {

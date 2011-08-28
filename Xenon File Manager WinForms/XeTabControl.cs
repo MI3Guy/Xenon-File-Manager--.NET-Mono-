@@ -1,5 +1,5 @@
 //  
-//  Program.cs
+//  XeTabControl.cs
 //  
 //  Author:
 //       John Bentley <pcguy49@yahoo.com>
@@ -18,26 +18,25 @@
 // 
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 using System;
 using System.Windows.Forms;
-using System.Reflection;
-using System.Diagnostics;
-using System.IO;
-using Mono.Unix;
+using WinTild;
 using Xenon.PluginUtil;
 
 namespace Xenon.FileManager.WinForms {
-	public static class Program {
-		public static void Main() {
-			Catalog.Init("xenon", Path.Combine(CommonUtil.ExecutablePath, "locale"));
+	public class XeTabControl : LazzyTab {
+		public XeTabControl() : base() {
+			//newTabMenuItem.Click += new EventHandler(NewTab_Clicked2);
+		}
+		
+		public override void AddTab() {
+			//Console.WriteLine("HERE");
+			TabPage newTab = (TabPage)CommonUtil.LoadControlInstance();
+			newTab.UseVisualStyleBackColor = true;
 			
-			CommonUtil.UIType = PluginUtil.PluginUIType.WinForms;
-			CommonUtil.LoadPlugins();
-			
-			Application.EnableVisualStyles();
-			Application.Run(new MainForm());
-			Process.GetCurrentProcess().Kill();
+			TabPages.Add(newTab);
+			CommonUtil.HomeButtonClicked((IDisplayInterfaceControl)newTab);
+			SelectedTab = newTab;
 		}
 	}
 }
