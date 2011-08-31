@@ -196,7 +196,7 @@ namespace Xenon.PluginUtil {
 		
 		public static void HomeButtonClicked(IDisplayInterfaceControl control) {
 			try {
-				LoadDirectory((Uri)SettingsUtil.MainSettings["home"], control);
+				LoadDirectory((Uri)SettingsUtil.MainSettings["home"].data, control);
 			}
 			catch(Exception ex) { Console.WriteLine(ex); }
 		}

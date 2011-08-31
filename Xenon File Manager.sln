@@ -63,7 +63,7 @@ Global
 		{FD549A73-8CD4-4AA7-A828-3CBF4D3F771B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Xenon File Manager WinForms\Xenon File Manager WinForms.csproj
+		StartupItem = Xenon File Manager GTK\Xenon File Manager GTK.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = None

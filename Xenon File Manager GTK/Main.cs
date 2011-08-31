@@ -17,6 +17,7 @@ namespace Xenon.FileManager.GtkUI {
 			MainWindow win = new MainWindow();
 			win.Show();
 			Application.Run();
+			SettingsUtil.SaveSettings();
 		}
 	}
 }
