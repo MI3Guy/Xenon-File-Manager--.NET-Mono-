@@ -29,9 +29,17 @@ namespace Xenon.FileManager.GtkUI {
 					NewFolderAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("New _Folder");
 					w1.Add (NewFolderAction, "F7");
 			
+					Gtk.Action EditAction = new Gtk.Action("EditAction", global::Mono.Unix.Catalog.GetString ("_Edit"), null, null);
+					FileAction.ShortLabel = Mono.Unix.Catalog.GetString("_Edit");
+					w1.Add (EditAction, null);
+			
+					Gtk.Action SettingsAction = new Gtk.Action("SettingsAction", null, null, "gtk-preferences");
+					//SettingsAction.ShortLabel = Catalog.GetString("_Preferences");
+					w1.Add(SettingsAction, null);
+			
 					uiMgr.InsertActionGroup (w1, 0);
 					this.AddAccelGroup (uiMgr.AccelGroup);
-					uiMgr.AddUiFromString ("<ui><menubar name='menubar1'><menu name='FileAction' action='FileAction'><menuitem name='NewTabAction' action='NewTabAction'/><menuitem name='NewFolderAction' action='NewFolderAction'/></menu></menubar></ui>");
+					uiMgr.AddUiFromString ("<ui><menubar name='menubar1'><menu name='FileAction' action='FileAction'><menuitem name='NewTabAction' action='NewTabAction'/><menuitem name='NewFolderAction' action='NewFolderAction'/></menu><menu name='EditAction' action='EditAction'><menuitem name='SettingsAction' action='SettingsAction'/></menu></menubar></ui>");
 					MenuBar menubar1 = (MenuBar)uiMgr.GetWidget("/menubar1");
 					menubar1.Name = "menubar1";
 				vbox1.PackStart(menubar1, false, false, 0);

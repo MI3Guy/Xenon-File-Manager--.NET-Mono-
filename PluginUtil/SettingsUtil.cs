@@ -20,6 +20,7 @@ namespace Xenon.PluginUtil {
 		public static readonly ConstSettingEntry[] ValidSettings = new ConstSettingEntry[] {
 			new ConstSettingEntry { name = "home", displayName = "Home", type = SettingType.Path },
 			new ConstSettingEntry { name = "show..item", displayName = "Show .. Item", type = SettingType.Bool },
+			new ConstSettingEntry { name = "showhidden", displayName = "Show Hidden Files", type = SettingType.Bool }
 			//new ConstSettingEntry { name = "" }
 		};
 		
@@ -51,6 +52,9 @@ namespace Xenon.PluginUtil {
 						break;
 					case "show..item":
 						MainSettings.Add("show..item", new SettingEntry { data = false, writetofile = false });
+						break;
+					case "showhidden":
+						MainSettings.Add("showhidden", new SettingEntry { data = false, writetofile = false });
 						break;
 				}
 			}

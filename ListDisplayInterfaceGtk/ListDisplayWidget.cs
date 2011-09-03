@@ -133,16 +133,17 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 		}
 		
 		private bool FilterList(Gtk.TreeModel model, Gtk.TreeIter iter) {
+			if((bool)SettingsUtil.MainSettings["showhidden"].data) { return true; }
 			try {
-				var text = model.GetValue(iter, 0);
-				string text2 = (text as XeFileInfo).Name;//.ToString();
-				Console.WriteLine("NotHERE");
-				if(text2[0] == '.')
+				var item = model.GetValue(iter, 0);
+				XeFileInfo xeiitem = item as XeFileInfo;//.ToString();
+				//Console.WriteLine("NotHERE");
+				if(xeiitem.IsHidden)
 					return false;
 				else
 					return true;
 			}
-			catch { Console.WriteLine("HERE"); return true; }
+			catch { /*Console.WriteLine("HERE");*/ return true; }
 		}
 	}
 }
