@@ -40,10 +40,6 @@
       <HintPath>..\libraries\TabPage.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="Gettext.Cs">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libraries\Gettext.Cs.dll</HintPath>
-    </Reference>
     <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>

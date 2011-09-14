@@ -40,6 +40,10 @@ namespace Xenon.Plugin.AboutFileSystemHandler {
 			
 			return null;
 		}
+		
+		public override bool Exists (Uri uri) {
+			return HandlesUriType(uri) && string.Compare(uri.AbsolutePath, "computer", true) == 0;
+		}
 	}
 }
 

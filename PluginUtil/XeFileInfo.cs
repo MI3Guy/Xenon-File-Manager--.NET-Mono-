@@ -8,7 +8,7 @@ namespace Xenon.PluginUtil
 		public delegate Stream FSIOFunc(XeFileInfo info);
 		
 		public XeFileInfo(FileInfo fi) {
-			fullPath = fi.FullName;
+			fullPath = new Uri("file://"+fi.FullName);
 			name = fi.Name;
 			dateCreated = fi.CreationTime;
 			dateAccessed = fi.LastAccessTime;
@@ -19,7 +19,7 @@ namespace Xenon.PluginUtil
 		}
 		
 		public XeFileInfo(DirectoryInfo di) {
-			fullPath = di.FullName;
+			fullPath = new Uri("file://"+di.FullName);
 			name = di.Name;
 			dateCreated = di.CreationTime;
 			dateAccessed = di.LastAccessTime;
@@ -29,7 +29,7 @@ namespace Xenon.PluginUtil
 			icon = CommonUtil.GetIconForDirectory(this);
 		}
 		
-		private string fullPath;
+		private Uri fullPath;
 		private string name;
 		private DateTime dateCreated;
 		private DateTime dateAccessed;
@@ -39,7 +39,7 @@ namespace Xenon.PluginUtil
 		private bool isFile;
 		private object icon;
 		
-		public string FullPath {
+		public Uri FullPath {
 			get { return fullPath; }
 			set { fullPath = value; }
 		}
@@ -81,7 +81,7 @@ namespace Xenon.PluginUtil
 		public bool IsHidden {
 			get {
 				if(CommonUtil.OSType == PluginOSType.Windows) return (attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
-				return name[0] == '.';
+				return name[0] == '.' && name != "..";
 			}
 		}
 		

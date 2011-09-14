@@ -55,6 +55,9 @@
     <Compile Include="CacheHash.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="CommonUtil.cs" />
+    <Compile Include="..\bin\Debug\ClipboardData.cs" />
+    <Compile Include="..\bin\Debug\PluginNotFoundException.cs" />
+    <Compile Include="..\bin\Debug\XeErrorHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

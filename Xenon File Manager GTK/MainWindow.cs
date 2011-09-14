@@ -1,8 +1,31 @@
+// 
+//  MainWindow.cs
+//  
+//  Author:
+//       John Bentley <pcguy49@yahoo.com>
+//  
+//  Copyright (c) 2011 John Bentley
+// 
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+// 
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Lesser General Public License for more details.
+// 
+//  You should have received a copy of the GNU Lesser General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.IO;
+using System.Reflection;
 using Gtk;
 using Mono.Unix;
 using Xenon.PluginUtil;
+using Microsoft.VisualBasic;
 
 namespace Xenon.FileManager.GtkUI {
 	public class MainWindow : Window {
@@ -22,44 +45,86 @@ namespace Xenon.FileManager.GtkUI {
 					Gtk.Action FileAction = new Gtk.Action("FileAction", global::Mono.Unix.Catalog.GetString ("_File"), null, null);
 					FileAction.ShortLabel = Mono.Unix.Catalog.GetString("_File");
 					w1.Add (FileAction, null);
-					Gtk.Action NewTabAction = new Gtk.Action("NewTabAction", global::Mono.Unix.Catalog.GetString ("New _Tab"), null, null);
+					Gtk.Action NewTabAction = new Gtk.Action("NewTabAction", Catalog.GetString ("New _Tab"), null, null);
 					NewTabAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("New _Tab");
 					w1.Add (NewTabAction, "<Control>t");
-					Gtk.Action NewFolderAction = new Gtk.Action("NewFolderAction", global::Mono.Unix.Catalog.GetString ("New _Folder"), null, null);
-					NewFolderAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("New _Folder");
-					w1.Add (NewFolderAction, "F7");
+					Gtk.Action CloseTabAction = new Gtk.Action("CloseTabAction", Catalog.GetString("_Close Tab"), null, null);
+					CloseTabAction.ShortLabel = Catalog.GetString("_Close Tab");
+					w1.Add(CloseTabAction, "<Control>F4");
+					Gtk.Action NewFolderAction = new Gtk.Action("NewFolderAction", global::Mono.Unix.Catalog.GetString("New _Folder"), null, null);
+					NewFolderAction.ShortLabel = global::Mono.Unix.Catalog.GetString("New _Folder");
+					w1.Add(NewFolderAction, "F7");
+					Gtk.Action NewFileAction = new Gtk.Action("NewFileAction", null, null, Stock.New);
+					w1.Add(NewFileAction, "");
+					Gtk.Action SearchAction = new Gtk.Action("SearchAction", Catalog.GetString("_Search"), null, null);
+					w1.Add(SearchAction, "<Control>F");
+					Gtk.Action RenameAction = new Gtk.Action("RenameAction", Catalog.GetString("_Rename"), null, null);
+					w1.Add(RenameAction, "F2");
+					Gtk.Action DeleteAction = new Gtk.Action("DeleteAction", null, null, Stock.Delete);
+					w1.Add(DeleteAction, "Delete");
+					Gtk.Action ExitAction = new Gtk.Action("ExitAction", null, null, Stock.Quit);
+					w1.Add(ExitAction, null);
 			
 					Gtk.Action EditAction = new Gtk.Action("EditAction", global::Mono.Unix.Catalog.GetString ("_Edit"), null, null);
-					FileAction.ShortLabel = Mono.Unix.Catalog.GetString("_Edit");
-					w1.Add (EditAction, null);
-			
-					Gtk.Action SettingsAction = new Gtk.Action("SettingsAction", null, null, "gtk-preferences");
-					//SettingsAction.ShortLabel = Catalog.GetString("_Preferences");
+					w1.Add(EditAction, null);
+					Gtk.Action CutAction = new Gtk.Action("CutAction", null, null, Stock.Cut);
+					w1.Add(CutAction, null);
+					Gtk.Action CopyAction = new Gtk.Action("CopyAction", null, null, Stock.Copy);
+					w1.Add(CopyAction, null);
+					Gtk.Action PasteAction = new Gtk.Action("PasteAction", null, null, Stock.Paste);
+					w1.Add(PasteAction, null);
+					Gtk.Action SelectAllAction = new Gtk.Action("SelectAllAction", null, null, Stock.SelectAll);
+					w1.Add(SelectAllAction, "<Control>a");
+					Gtk.Action SelectNoneAction = new Gtk.Action("SelectNoneAction", Catalog.GetString("Select _None"), null, null);
+					w1.Add(SelectNoneAction, "<Control><Shift>a");
+					Gtk.Action SettingsAction = new Gtk.Action("SettingsAction", null, null, Stock.Preferences);
 					w1.Add(SettingsAction, null);
+			
+					Gtk.Action ViewAction = new Gtk.Action("ViewAction", Catalog.GetString("_View"), null, null);
+					w1.Add(ViewAction, null);
+					Gtk.Action RefreshAction = new Gtk.Action("RefreshAction", null, null, Stock.Refresh);
+					w1.Add(RefreshAction, "F5");
+			
+					Gtk.Action HelpMenuAction = new Gtk.Action("HelpMenuAction", Catalog.GetString("_Help"), null, null);
+					w1.Add(HelpMenuAction, null);
+					Gtk.Action HelpAction = new Gtk.Action("HelpAction", null, null, Stock.Help);
+					w1.Add(HelpAction, null);
+					Gtk.Action AboutAction = new Gtk.Action("AboutAction", null, null, Stock.About);
+					w1.Add(AboutAction, null);
 			
 					uiMgr.InsertActionGroup (w1, 0);
 					this.AddAccelGroup (uiMgr.AccelGroup);
-					uiMgr.AddUiFromString ("<ui><menubar name='menubar1'><menu name='FileAction' action='FileAction'><menuitem name='NewTabAction' action='NewTabAction'/><menuitem name='NewFolderAction' action='NewFolderAction'/></menu><menu name='EditAction' action='EditAction'><menuitem name='SettingsAction' action='SettingsAction'/></menu></menubar></ui>");
+					uiMgr.AddUiFromString (
+@"<ui><menubar name='menubar1'>
+<menu name='FileAction' action='FileAction'><menuitem name='NewTabAction' action='NewTabAction'/><menuitem name='CloseTabAction' action='CloseTabAction'/><separator/>
+<menuitem name='NewFolderAction' action='NewFolderAction'/><menu name='NewFileAction' action='NewFileAction'/><separator/>
+<menuitem name='SearchAction' action='SearchAction'/><separator/>
+<menuitem name='RenameAction' action='RenameAction'/><menuitem name='DeleteAction' action='DeleteAction'/><separator/>
+<menuitem name='ExitAction' action='ExitAction'/></menu>
+<menu name='EditAction' action='EditAction'><menuitem name='CutAction' action='CutAction'/><menuitem name='CopyAction' action='CopyAction'/><menuitem name='PasteAction' action='PasteAction'/><separator/>
+<menuitem name='SelectAllAction' action='SelectAllAction'/><menuitem name='SelectNoneAction' action='SelectNoneAction'/><separator/>
+<menuitem name='SettingsAction' action='SettingsAction'/></menu>
+<menu name='ViewAction' action='ViewAction'><menuitem name='RefreshAction' action='RefreshAction'/></menu>
+<menu name='HelpMenuAction' action='HelpMenuAction'><menuitem name='HelpAction' action='HelpAction'/><menuitem name='AboutAction' action='AboutAction'/></menu>
+</menubar></ui>"
+			        );
 					MenuBar menubar1 = (MenuBar)uiMgr.GetWidget("/menubar1");
 					menubar1.Name = "menubar1";
 				vbox1.PackStart(menubar1, false, false, 0);
 				toolbar = new Toolbar();
-					toolbar.Insert(backButton = new ToolButton(Gtk.Stock.GoBack), 0);
-					toolbar.Insert(forwardButton = new ToolButton(Gtk.Stock.GoForward), 1);
-					toolbar.Insert(parentButton = new ToolButton(Gtk.Stock.GoUp), 2);
+					toolbar.Insert(backButton = new ToolButton(Stock.GoBack), 0);
+					toolbar.Insert(forwardButton = new ToolButton(Stock.GoForward), 1);
+					toolbar.Insert(parentButton = new ToolButton(Stock.GoUp), 2);
 					toolbar.Insert(new SeparatorToolItem(), 3);
-					toolbar.Insert(homeButton = new ToolButton(Stock.Home), 4);
-					toolbar.Insert(refreshButton = new ToolButton(Gtk.Stock.Refresh), 5);
-					toolbar.Insert(computerButton = new ToolButton(Gtk.Image.NewFromIconName("computer", IconSize.Button), Catalog.GetString("Computer")), 6);
+					toolbar.Insert(computerButton = new ToolButton(Image.NewFromIconName("computer", IconSize.Button), Catalog.GetString("Computer")), 4);
+					toolbar.Insert(homeButton = new ToolButton(Stock.Home), 5);
+					toolbar.Insert(refreshButton = new ToolButton(Stock.Refresh), 6);
 					computerButton.Sensitive = CommonUtil.CanLoadComputer();
 					toolbar.Insert(new SeparatorToolItem(), 7);
 					toolbar.Insert(cutButton = new ToolButton(Stock.Cut), 8);
-					cutButton.Sensitive = false;
 					toolbar.Insert(copyButton = new ToolButton(Stock.Copy), 9);
-					copyButton.Sensitive = false;
 					toolbar.Insert(pasteButton = new ToolButton(Stock.Paste), 10);
-					pasteButton.Sensitive = false;
-					toolbar.Insert(new ToolButton(Stock.Preferences), 11);
+					//toolbar.Insert(new ToolButton(Stock.Preferences), 11);
 				vbox1.PackStart(toolbar, false, false, 0);
 				
 			    locationBar = new Entry();
@@ -77,15 +142,27 @@ namespace Xenon.FileManager.GtkUI {
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
 			locationBar.Activated += new EventHandler(LoadDirectory);
 			nb.SwitchPage += new SwitchPageHandler(OnTabChanged);
-			NewFolderAction.Activated += new EventHandler(this.OnNewFolderActionActivated);
 			NewTabAction.Activated += new EventHandler(this.OnNewTabActionActivated);
+			NewFolderAction.Activated += new EventHandler(this.OnNewFolderActionActivated);
+			CutAction.Activated += OnCutEvent;
+			CopyAction.Activated += OnCopyEvent;
+			PasteAction.Activated += OnPasteEvent;
+			SelectAllAction.Activated += OnSelectAllActionActivated;
+			SelectNoneAction.Activated += OnSelectNoneActionActivated;
+			SettingsAction.Activated += new EventHandler(this.OnSettingActionActivated);
+			RefreshAction.Activated += OnRefreshEvent;
+			AboutAction.Activated += OnAboutActionActivated;
+			
 			backButton.Clicked += new EventHandler(this.OnBackEvent);
 			forwardButton.Clicked += new EventHandler(this.OnForwardEvent);
 			parentButton.Clicked += new EventHandler(this.OnParentEvent);
+			computerButton.Clicked += new EventHandler(this.OnComputerEvent);
 			homeButton.Clicked += new EventHandler(this.OnHomeEvent);
 			refreshButton.Clicked += new EventHandler(this.OnRefreshEvent);
-			computerButton.Clicked += new EventHandler(this.OnComputerEvent);
-			CommonUtil.DirectoryChanged += new DirectoryChangedEventHandler(this.OnDirectoryChanged);
+			cutButton.Clicked += OnCutEvent;
+			copyButton.Clicked += OnCopyEvent;
+			pasteButton.Clicked += OnPasteEvent;
+			CommonUtil.DirectoryChanged += OnDirectoryChanged;
 			
 			
 			SetActionStates();
@@ -136,6 +213,54 @@ namespace Xenon.FileManager.GtkUI {
 			
 		}
 		
+		protected void OnSelectAllActionActivated(object sender, EventArgs e) {
+			((IDisplayInterfaceControl)nb.CurrentPageWidget).SelectAll();
+		}
+		
+		protected void OnSelectNoneActionActivated(object sender, EventArgs e) {
+			((IDisplayInterfaceControl)nb.CurrentPageWidget).SelectNone();
+		}
+		
+		protected void OnSettingActionActivated(object sender, EventArgs e) {
+			new SettingsDialog().ShowAll();
+		}
+		
+		protected void OnAboutActionActivated(object sender, EventArgs e) {
+			AboutDialog dialog = new AboutDialog ();
+			Assembly asm = Assembly.GetExecutingAssembly ();
+			
+			dialog.ProgramName = (asm.GetCustomAttributes (
+				typeof (AssemblyTitleAttribute), false) [0]
+				as AssemblyTitleAttribute).Title;
+			
+			dialog.Version = asm.GetName ().Version.ToString ();
+			
+			dialog.Comments = (asm.GetCustomAttributes (
+				typeof (AssemblyDescriptionAttribute), false) [0]
+				as AssemblyDescriptionAttribute).Description;
+			
+			dialog.Copyright = (asm.GetCustomAttributes (
+				typeof (AssemblyCopyrightAttribute), false) [0]
+				as AssemblyCopyrightAttribute).Copyright;
+			
+			dialog.License = @"This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.";
+			
+			dialog.Authors = new string[] { "John Bentley <pcguy49@yahoo.com>" };
+			
+			dialog.Run();
+		}
+		
 			
 		protected void OnBackEvent(object sender, EventArgs e) {
 			// TODO: Handle no tab
@@ -161,6 +286,18 @@ namespace Xenon.FileManager.GtkUI {
 		
 		protected void OnComputerEvent(object sender, EventArgs e) {
 			CommonUtil.ComputerButtonClicked((IDisplayInterfaceControl)nb.CurrentPageWidget);
+		}
+		
+		protected void OnCutEvent(object sender, EventArgs e) {
+			CommonUtil.CutButtonClicked((IDisplayInterfaceControl)nb.CurrentPageWidget);
+		}
+		
+		protected void OnCopyEvent(object sencer, EventArgs e) {
+			CommonUtil.CopyButtonClicked((IDisplayInterfaceControl)nb.CurrentPageWidget);
+		}
+		
+		protected void OnPasteEvent(object sender, EventArgs e) {
+			CommonUtil.PasteButtonClicked((IDisplayInterfaceControl)nb.CurrentPageWidget);
 		}
 		
 		

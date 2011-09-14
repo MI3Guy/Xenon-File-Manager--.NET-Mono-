@@ -53,6 +53,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="Microsoft.VisualBasic" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PluginUtil\PluginUtil.csproj">
@@ -67,6 +68,7 @@
     <Compile Include="TabLabel.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="SettingsDialog.cs" />
+    <Compile Include="ProgessWindow.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

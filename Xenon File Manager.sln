@@ -69,6 +69,6 @@ Global
 		$1.DirectoryNamespaceAssociation = None
 		$1.ResourceNamePolicy = FileFormatDefault
 		$0.StandardHeader = $2
-		$2.inheritsSet = GPLv3License
+		$2.inheritsSet = LGPLv3License
 	EndGlobalSection
 EndGlobal

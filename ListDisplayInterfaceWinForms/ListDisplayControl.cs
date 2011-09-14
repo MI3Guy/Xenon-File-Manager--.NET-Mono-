@@ -36,6 +36,7 @@ namespace Xenon.Plugin.ListDisplayInterfaceWinForms {
 			lv.View = View.Details;
 			lv.AllowColumnReorder = false;
 			lv.FullRowSelect = true;
+			lv.MultiSelect = true;
 			
 			lv.Columns.Add("Name", 200);
 			lv.Columns.Add("Size", 100);
@@ -64,6 +65,33 @@ namespace Xenon.Plugin.ListDisplayInterfaceWinForms {
 			foreach(XeFileInfo fi in fileList) lv.Items.Add(new ListViewItem(new string[] { fi.Name, fi.FormattedSize, fi.DateModified.ToString() }));
 			CommonUtil.NotifyDirectoryChanged(this, new DirectoryChangedEventArgs(path, this));
 			lv.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+		}
+		
+		public IEnumerable<XeFileInfo> SelectedFiles {
+			get {
+				//return from index in lv.SelectedIndices select localFileList[index];
+				XeFileInfo[] selectedList = new XeFileInfo[lv.SelectedIndices.Count];
+				for(int i = 0; i < selectedList.Length; ++i) {
+					selectedList[i] = localFileList[lv.SelectedIndices[i]];
+				}
+				return selectedList;
+			}
+		}
+		
+		public void Rename() {
+			
+		}
+		
+		public void SelectAll() {
+			foreach(ListViewItem lvi in lv.Items) {
+				if(lvi.Text == "..") continue;
+				lvi.Selected = true;
+			}
+		}
+		public void SelectNone() {
+			foreach(ListViewItem lvi in lv.Items) {
+				lvi.Selected = true;
+			}
 		}
 		
 		public void OnItemActivated(object sender, EventArgs e) {

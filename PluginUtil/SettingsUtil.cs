@@ -45,18 +45,27 @@ namespace Xenon.PluginUtil {
 			LoadSettings();
 			
 			foreach(ConstSettingEntry entry in ValidSettings) {
-				if(AllSettings.ContainsKey(entry.name)) continue;
-				switch(entry.name) {
-					case "home":
-						MainSettings.Add("home", new SettingEntry { data = new Uri(Environment.GetFolderPath(Environment.SpecialFolder.Personal)), writetofile = false });
-						break;
-					case "show..item":
-						MainSettings.Add("show..item", new SettingEntry { data = false, writetofile = false });
-						break;
-					case "showhidden":
-						MainSettings.Add("showhidden", new SettingEntry { data = false, writetofile = false });
-						break;
-				}
+				if(MainSettings.ContainsKey(entry.name)) continue;
+				MainSettings.Add(entry.name, DefaultSetting(entry.name));
+			}
+			
+			var tmpMainSettings = from kv in MainSettings orderby kv.Key select kv;
+			MainSettings = new Dictionary<string, SettingEntry>();
+			foreach(KeyValuePair<string, SettingEntry> kv in tmpMainSettings) {
+				MainSettings.Add(kv.Key, kv.Value);
+			}
+		}
+		
+		public static SettingEntry DefaultSetting(string name) {
+			switch(name) {
+				case "home":
+					return new SettingEntry { data = new Uri(Environment.GetFolderPath(Environment.SpecialFolder.Personal)), writetofile = false };
+				case "show..item":
+					return new SettingEntry { data = false, writetofile = false };
+				case "showhidden":
+					return new SettingEntry { data = false, writetofile = false };
+				default:
+					return null;
 			}
 		}
 		
@@ -119,9 +128,9 @@ namespace Xenon.PluginUtil {
 									val = int.Parse(subEntry.Value.ToString());
 									break;
 							}
-							subEntries.Add((string)subEntry.Key, new SettingEntry { data = val, writetofile = true });
+							subEntries[(string)subEntry.Key] = new SettingEntry { data = val, writetofile = true };
 						}
-						AllSettings.Add((string)entry.Key, subEntries);
+						AllSettings[(string)entry.Key] = subEntries;
 						
 						switch((string)entry.Key) {
 							case "Main Settings":
@@ -134,7 +143,7 @@ namespace Xenon.PluginUtil {
 						}
 					}
 				}
-				catch {}
+				catch { throw; }
 			}
 		}
 		

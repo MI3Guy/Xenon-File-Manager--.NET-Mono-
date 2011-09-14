@@ -35,15 +35,24 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 			Console.WriteLine(uri.ToString());
 			DirectoryInfo[] di2 = di.GetDirectories();
 			FileInfo[] fi = di.GetFiles();
-			XeFileInfo[] fi2 = new XeFileInfo[di2.Length + fi.Length];
-			int i;
-			for(i = 0; i < di2.Length; ++i) {
-				fi2[i] = new XeFileInfo(di2[i]);
+			int extra = ((bool)SettingsUtil.MainSettings["show..item"].data && di.Parent != null) ? 1 : 0;
+			XeFileInfo[] fi2 = new XeFileInfo[di2.Length + fi.Length + extra];
+			if(extra != 0) {
+				fi2[0] = new XeFileInfo(di.Parent);
+				fi2[0].Name = "..";
+			}
+			int i = extra;
+			for(int j = 0; j < di2.Length; ++j, ++i) {
+				fi2[i] = new XeFileInfo(di2[j]);
 			}
 			for(int j = 0; j < fi.Length; ++j, ++i) {
 				fi2[i] = new XeFileInfo(fi[j]);
 			}
 			return fi2;
+		}
+		
+		public override bool Exists(Uri uri) {
+			return uri.IsFile && File.Exists(uri.GetScrubbedLocalPath());
 		}
 	}
 }

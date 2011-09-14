@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 
@@ -34,7 +35,8 @@ namespace Xenon.PluginUtil {
 		}
 		
 		public static event DirectoryChangedEventHandler DirectoryChanged;
-		public static event TabOpenedEventHandler TabOpened;
+		public static event XeErrorHandler ErrorOccurred;
+		//public static event TabOpenedEventHandler TabOpened;
 		
 		public static readonly PluginOSType OSType;
 		private static bool hasSetUI = false;
@@ -48,6 +50,7 @@ namespace Xenon.PluginUtil {
 		private static List<FileSystemHandler> fsHandlers = new List<FileSystemHandler>();
 		private static List<DisplayInterfaceHandler> dispInterfaceHandlers = new List<DisplayInterfaceHandler>();
 		private static List<FileTypeIconHandler> fileTypeIconHandlers = new List<FileTypeIconHandler>();
+		private static List<ClipboardHandler> clipboardHandlers = new List<ClipboardHandler>();
 		
 		public static void LoadPlugins() {
 			DirectoryInfo directory = new DirectoryInfo(Path.Combine(ExecutablePath, "plugins"));
@@ -63,12 +66,19 @@ namespace Xenon.PluginUtil {
 					
 					if(instance is FileSystemHandler) {
 						fsHandlers.Add((FileSystemHandler)instance);
+						instance.InitPlugin();
 					}
 					else if(instance is DisplayInterfaceHandler) {
 						dispInterfaceHandlers.Add((DisplayInterfaceHandler)instance);
+						instance.InitPlugin();
 					}
 					else if(instance is FileTypeIconHandler) {
 						fileTypeIconHandlers.Add((FileTypeIconHandler)instance);
+						instance.InitPlugin();
+					}
+					else if(instance is ClipboardHandler) {
+						clipboardHandlers.Add((ClipboardHandler)instance);
+						instance.InitPlugin();
 					}
 				}
 				catch(Exception ex) {
@@ -79,10 +89,10 @@ namespace Xenon.PluginUtil {
 #endregion
 		
 		public static void NotifyDirectoryChanged(object sender, DirectoryChangedEventArgs e) {
-			bool s = sender == null;
 			DirectoryChanged(sender, e);
 		}
 		
+#region Plugin Determination
 		public static bool HandlesDirectory(Uri path) {
 			foreach(FileSystemHandler handler in fsHandlers) {
 				if(handler.HandlesUriType(path)) {
@@ -93,74 +103,60 @@ namespace Xenon.PluginUtil {
 		}
 		
 		public static XeFileInfo[] DirectoryListing(string dir, out Uri pathOut) {
-			try {
-				Uri path = new Uri(dir);
-				XeFileInfo[] fi = DirectoryListing(ref path);
-				if(fi != null) {
-					pathOut = path;
-					return fi;
-				}
-			}
-			catch { pathOut = null; return null; }
-			pathOut = null;
-			return null;
+			Uri path = new Uri(dir);
+			XeFileInfo[] fi = DirectoryListing(ref path);
+			pathOut = path;
+			return fi;
 		}
 		
 		public static XeFileInfo[] DirectoryListing(ref Uri path) {
-			try {
-				foreach(FileSystemHandler handler in fsHandlers) {
-					if(handler.HandlesUriType(path)) {
-						XeFileInfo[] fi = handler.LoadDirectory(ref path);
-						if(fi == null && !handler.HandlesUriType(path)) return DirectoryListing(ref path);
-						return fi;
-					}
+			foreach(FileSystemHandler handler in fsHandlers) {
+				if(handler.HandlesUriType(path)) {
+					XeFileInfo[] fi = handler.LoadDirectory(ref path);
+					if(fi == null && !handler.HandlesUriType(path)) return DirectoryListing(ref path);
+					return fi;
 				}
 			}
-			catch(Exception ex) { Console.WriteLine(ex); return null; }
-			return null;
+			throw new PluginNotFoundException();
 		}
 		
 		public static Uri ParentDirectoryFor(Uri path) {
-			try {
-				foreach(FileSystemHandler handler in fsHandlers) {
-					if(handler.HandlesUriType(path)) {
-						return handler.ParentDirectory(path);
-					}
+			foreach(FileSystemHandler handler in fsHandlers) {
+				if(handler.HandlesUriType(path)) {
+					return handler.ParentDirectory(path);
 				}
 			}
-			catch { return null; }
-			return null;
+			throw new PluginNotFoundException();
 		}
 		
 		public static IDisplayInterfaceControl LoadControlInstance() {
-			try {
-				foreach(DisplayInterfaceHandler handler in dispInterfaceHandlers) {
-					return handler.InitControl();
-				}
+			foreach(DisplayInterfaceHandler handler in dispInterfaceHandlers) {
+				return handler.InitControl();
 			}
-			catch { return null; }
-			return null;
+			throw new PluginNotFoundException();
 		}
 		
 		public static object GetIconForFile(XeFileInfo file) {
-			try {
-				foreach(FileTypeIconHandler handler in fileTypeIconHandlers) {
-					return handler.FindIcon(new Uri(file.FullPath), Path.GetExtension(file.Name), null);
-				}
+			foreach(FileTypeIconHandler handler in fileTypeIconHandlers) {
+				return handler.FindIcon(file.FullPath, Path.GetExtension(file.Name), null);
 			}
-			catch { return null; }
-			return null;
+			throw new PluginNotFoundException();
 		}
 		
 		public static object GetIconForDirectory(XeFileInfo file) {
-			try {
-				foreach(FileTypeIconHandler handler in fileTypeIconHandlers) {
-					return handler.FindIconDir(new Uri(file.FullPath), Path.GetExtension(file.Name), null);
-				}
+			foreach(FileTypeIconHandler handler in fileTypeIconHandlers) {
+				return handler.FindIconDir(file.FullPath, Path.GetExtension(file.Name), null);
 			}
-			catch { return null; }
-			return null;
+			throw new PluginNotFoundException();
 		}
+		
+		public static ClipboardHandler PrimaryClipboardHandler {
+			get {
+				if(clipboardHandlers.Count == 0) throw new PluginNotFoundException();
+				return clipboardHandlers[0];
+			}
+		}
+#endregion
 		
 		public static bool HasBackHistory(IDisplayInterfaceControl control) {
 			return control.HistoryBack.Count != 0;
@@ -211,6 +207,24 @@ namespace Xenon.PluginUtil {
 		
 		public static void RefreshButtonClicked(IDisplayInterfaceControl control) {
 			LoadDirectory(control.CurrentLocation, control, false);
+		}
+		
+		public static void CutButtonClicked(IDisplayInterfaceControl control) {
+			ClipboardHandler handler = PrimaryClipboardHandler;
+			if(handler == null) return;
+			handler.ExposePaths(new ClipboardData(from file in control.SelectedFiles select file.FullPath, OperationType.Cut));
+		}
+		
+		public static void CopyButtonClicked(IDisplayInterfaceControl control) {
+			ClipboardHandler handler = PrimaryClipboardHandler;
+			if(handler == null) return;
+			handler.ExposePaths(new ClipboardData(from file in control.SelectedFiles select file.FullPath, OperationType.Copy));
+		}
+		
+		public static void PasteButtonClicked(IDisplayInterfaceControl control) {
+			ClipboardHandler handler = PrimaryClipboardHandler;
+			if(handler == null) return;
+			handler.RequestPaths(delegate(object sender, EventArgs e) {});
 		}
 		
 		public static void LoadDirectory(string text, IDisplayInterfaceControl control) {
