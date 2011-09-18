@@ -10,6 +10,7 @@ namespace Xenon.PluginUtil
 		
 		void SetContent(IEnumerable<XeFileInfo> fileList, Uri path);
 		IEnumerable<XeFileInfo> SelectedFiles { get; }
+		void NewFolder();
 		void Rename();
 		void SelectAll();
 		void SelectNone();

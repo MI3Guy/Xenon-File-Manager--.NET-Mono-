@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gtk;
+using Mono.Unix;
 using Xenon.PluginUtil;
 
 namespace Xenon.Plugin.ListDisplayInterfaceGtk {
@@ -32,6 +33,7 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 			historyForward = new CacheStack<Uri>(CommonUtil.HistoryNumItems, CommonUtil.HistoryTrimNum);
 			
 			mainTreeView = new TreeView();
+			
 			mainTreeView.Selection.Mode = SelectionMode.Multiple;
 				TreeViewColumn col = new TreeViewColumn();
 				col.Title = "";
@@ -40,13 +42,15 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 				CellRendererPixbuf iconCell = new CellRendererPixbuf();
 				col.PackStart(iconCell, true);
 				col.SetCellDataFunc(iconCell, new TreeCellDataFunc(RenderIcon));
-				col = new TreeViewColumn();
+				col2=col = new TreeViewColumn();
 				col.Title = "Name";
 				col.Sizing = TreeViewColumnSizing.Autosize;
 				mainTreeView.AppendColumn(col);
 				Gtk.CellRendererText nameCell = new Gtk.CellRendererText();
 				col.PackStart(nameCell, true);
 				col.SetCellDataFunc(nameCell, new TreeCellDataFunc(RenderFileName));
+				nameCell.Edited += fileNameCell_Edited;
+				rend = nameCell;
 				col = new TreeViewColumn();
 				col.Title = "Size";
 				mainTreeView.AppendColumn(col);
@@ -58,10 +62,10 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 				mainTreeView.AppendColumn(col);
 				Gtk.CellRendererText dateCell = new Gtk.CellRendererText();
 				col.PackStart(dateCell, true);
-				col.AddAttribute(dateCell, "text", 2);
+				//col.AddAttribute(dateCell, "text", 2);
 				col.SetCellDataFunc(dateCell, new TreeCellDataFunc(RenderFileDateModified));
 				listStore = new ListStore(typeof(XeFileInfo));
-			mainTreeView.Model = listStore;
+			//mainTreeView.Model = listStore;
 			TreeModelFilter filter = new TreeModelFilter(listStore, null);
 			filter.VisibleFunc = new Gtk.TreeModelFilterVisibleFunc(FilterList);
 			mainTreeView.Model = filter;
@@ -75,6 +79,8 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 		private CacheStack<Uri> historyBack;
 		private CacheStack<Uri> historyForward;
 		private Uri currentLocation;
+		CellRendererText rend;
+		TreeViewColumn col2;
 		
 		public CacheStack<Uri> HistoryBack {
 			get { return historyBack; }
@@ -92,13 +98,15 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 		}
 		
 		public void SetContent(IEnumerable<XeFileInfo> fileList, Uri path) {
-			listStore.Clear();
-			int i = 0;
-			foreach(XeFileInfo fi in fileList) {
-				listStore.AppendValues(fi);
-				++i;
-			}
-			CommonUtil.NotifyDirectoryChanged(this, new DirectoryChangedEventArgs(path, this));
+			Application.Invoke(delegate(object sender, EventArgs e) {
+				listStore.Clear();
+				int i = 0;
+				foreach(XeFileInfo fi in fileList) {
+					listStore.AppendValues(fi);
+					++i;
+				}
+				CommonUtil.NotifyDirectoryChanged(this, new DirectoryChangedEventArgs(path, this));
+			});
 		}
 		
 		public IEnumerable<XeFileInfo> SelectedFiles {
@@ -111,10 +119,41 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 			return iter;
 		}
 		
-		public void Rename() {
+		private void fileNameCell_Edited(object o, Gtk.EditedArgs args) {
+			rend.Editable = false;
+			Gtk.TreeIter iter;
+			mainTreeView.Model.GetIter(out iter, new Gtk.TreePath(args.Path));
 			
+			XeFileInfo fi = (XeFileInfo)mainTreeView.Model.GetValue(iter, 0);
+			if(!fi.Ready) {
+				CommonUtil.FileSystem.CreateDirectory(new Uri(CurrentLocation, args.NewText));
+			}
+			else {
+				// TODO: Move file.
+				CommonUtil.FileSystem.Move(fi.FullPath, new Uri(CurrentLocation, args.NewText));
+			}
 		}
+		
+		public void NewFolder() {
+			TreeIter iter = listStore.AppendValues(new XeFileInfo());
+			//mainTreeView.SetCursor(mainTreeView.Model.GetPath(iter), mainTreeView.GetColumn(1), true);
+			TreeIter iter2 = ((TreeModelFilter)mainTreeView.Model).ConvertChildIterToIter(iter);
+			TreePath path = mainTreeView.Model.GetPath(iter2);
 			
+			rend.Editable = true;
+			mainTreeView.SetCursorOnCell(path, col2, rend, true);
+		}
+		
+		public void Rename() {
+			TreePath[] paths = mainTreeView.Selection.GetSelectedRows();
+			if(paths.Length == 1) {
+				rend.Editable = true;
+				mainTreeView.SetCursorOnCell(paths[0], col2, rend, true);
+			}
+			else {
+				// TODO: Bulk rename.
+			}
+		}
 		
 		public void SelectAll() {
 			mainTreeView.Selection.SelectAll();
@@ -133,14 +172,22 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 			
 			if(!mainTreeView.Model.GetIter(out iter, args.Path)) { return; }
 			XeFileInfo file = (XeFileInfo)mainTreeView.Model.GetValue(iter, 0);
-			if(file.IsFile) return;
 			
-			CommonUtil.LoadDirectory(file.FullPath, this);
+			if(file.IsFile) {
+				CommonUtil.LoadFile(file.FullPath, this);
+			}
+			else {
+				CommonUtil.LoadDirectory(file.FullPath, this);
+			}
 		}
 			
 		private void RenderIcon(Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter) {
 			try {
 				XeFileInfo file = (XeFileInfo) model.GetValue(iter, 0);
+				if(!file.Ready) {
+					(cell as Gtk.CellRendererPixbuf).Pixbuf = null;
+					return;
+				}
 				(cell as CellRendererPixbuf).Pixbuf = ((IconSet)file.Icon).RenderIcon(new Style(), TextDirection.None, StateType.Normal, IconSize.SmallToolbar, mainTreeView, "");
 			}
 			catch(Exception ex) { Console.WriteLine(ex);}
@@ -148,16 +195,28 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 		
 		private void RenderFileName(Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter) {
 			XeFileInfo file = (XeFileInfo) model.GetValue(iter, 0);
+			if(!file.Ready) {
+				(cell as Gtk.CellRendererText).Text = Catalog.GetString("New Folder");
+				return;
+			}
 			(cell as Gtk.CellRendererText).Text = file.Name;
 		}
 		
 		private void RenderFileSize(Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter) {
 			XeFileInfo file = (XeFileInfo) model.GetValue(iter, 0);
+			if(!file.Ready) {
+				(cell as Gtk.CellRendererText).Text = "";
+				return;
+			}
 			(cell as Gtk.CellRendererText).Text = file.FormattedSize;
 		}
 		
 		private void RenderFileDateModified(Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter) {
 			XeFileInfo file = (XeFileInfo) model.GetValue(iter, 0);
+			if(!file.Ready) {
+				(cell as Gtk.CellRendererText).Text = "";
+				return;
+			}
 			(cell as Gtk.CellRendererText).Text = file.DateModified.ToString();
 		}
 		

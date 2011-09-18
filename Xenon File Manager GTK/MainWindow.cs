@@ -22,6 +22,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using Gtk;
 using Mono.Unix;
 using Xenon.PluginUtil;
@@ -143,6 +144,7 @@ namespace Xenon.FileManager.GtkUI {
 			locationBar.Activated += new EventHandler(LoadDirectory);
 			nb.SwitchPage += new SwitchPageHandler(OnTabChanged);
 			NewTabAction.Activated += new EventHandler(this.OnNewTabActionActivated);
+			CloseTabAction.Activated += OnCloseTabActionActivated;
 			NewFolderAction.Activated += new EventHandler(this.OnNewFolderActionActivated);
 			CutAction.Activated += OnCutEvent;
 			CopyAction.Activated += OnCopyEvent;
@@ -165,8 +167,9 @@ namespace Xenon.FileManager.GtkUI {
 			CommonUtil.DirectoryChanged += OnDirectoryChanged;
 			
 			
-			SetActionStates();
 			CommonUtil.HomeButtonClicked((IDisplayInterfaceControl)nb.CurrentPageWidget);
+			while(((IDisplayInterfaceControl)nb.CurrentPageWidget).CurrentLocation == null) Thread.Sleep(100);
+			SetActionStates();
 			this.ShowAll();
 		}
 		
@@ -206,11 +209,16 @@ namespace Xenon.FileManager.GtkUI {
 			int num = nb.AppendPage((Widget)CommonUtil.LoadControlInstance(), new TabLabel(string.Empty, nb));
 			nb.ShowAll();
 			CommonUtil.HomeButtonClicked((IDisplayInterfaceControl)nb.GetNthPage(num));
+			while(((IDisplayInterfaceControl)nb.GetNthPage(num)).CurrentLocation == null) Thread.Sleep(100);
 			nb.CurrentPage = num;
 		}
 		
+		protected void OnCloseTabActionActivated(object sender, EventArgs e) {
+			nb.RemovePage(nb.CurrentPage);
+		}
+		
 		protected void OnNewFolderActionActivated(object sender, EventArgs e) {
-			
+			((IDisplayInterfaceControl)nb.CurrentPageWidget).NewFolder();
 		}
 		
 		protected void OnSelectAllActionActivated(object sender, EventArgs e) {
@@ -306,6 +314,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.";
 			locationBar.Text = e.FullPath;
 			
 			SetActionStates();
+			IDisplayInterfaceControl[] controls = new IDisplayInterfaceControl[nb.NPages];
+			for(int i = 0; i < nb.NPages; ++i) { controls[i] = (IDisplayInterfaceControl)nb.GetNthPage(i); }
+			CommonUtil.FileSystem.UpdateWatchList(controls);
 		}
 		
 		

@@ -1,0 +1,5 @@
+Xenon File Manager is an open source, modular, and cross platform file manager written in C# for the mono platform. It does not run on Microsoft .NET for a few reasons: MS.NET does not have gettext support, MS.NET would require additional effort to support, and mono allows all dependencies to be included with the program.
+
+Xenon's modular design allows for the simple addition of additional file system sources such as network data or reading archives. It also allows user interfaces to be switched out easily allowing native cross platform support.
+
+Currently the Gtk UI is the most mature so I recommend using it on linux. There is also a WinForms user interface that is designed for windows. In the future there may be a Qt or Mac UI. Mac is less likely due to my lack of any apple hardware.

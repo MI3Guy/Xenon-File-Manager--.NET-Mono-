@@ -58,6 +58,7 @@
     <Compile Include="..\bin\Debug\ClipboardData.cs" />
     <Compile Include="..\bin\Debug\PluginNotFoundException.cs" />
     <Compile Include="..\bin\Debug\XeErrorHandler.cs" />
+    <Compile Include="..\bin\Debug\CommonUtil.FileSystem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

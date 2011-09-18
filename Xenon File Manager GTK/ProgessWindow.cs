@@ -20,11 +20,23 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using Gtk;
 
 namespace Xenon.FileManager.GtkUI {
 	public class ProgessWindow : Window {
-		public ProgessWindow() : base("File Operation Progress") {
+		List<Widget> childList = new List<Widget>();
+		List<ProgressBar> barList = new List<ProgressBar>();
+		
+		public ProgessWindow() : base(WindowType.Popup) {
+			Title = "File Operation Progress";
+			
+			VBox vbox = new VBox();
+			
+			
+		}
+		
+		public void AddOperation(object val) {
 			
 		}
 	}

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 
 namespace Xenon.PluginUtil {
-	public static class CommonUtil {
+	public static partial class CommonUtil {
 		public const int IconCacheMaxSize = 2048;
 		public const int IconCacheTrimSize = 1024;
 		
@@ -67,6 +68,7 @@ namespace Xenon.PluginUtil {
 					if(instance is FileSystemHandler) {
 						fsHandlers.Add((FileSystemHandler)instance);
 						instance.InitPlugin();
+						((FileSystemHandler)instance).Updated += FileSystem.OnUpdated;
 					}
 					else if(instance is DisplayInterfaceHandler) {
 						dispInterfaceHandlers.Add((DisplayInterfaceHandler)instance);
@@ -93,41 +95,6 @@ namespace Xenon.PluginUtil {
 		}
 		
 #region Plugin Determination
-		public static bool HandlesDirectory(Uri path) {
-			foreach(FileSystemHandler handler in fsHandlers) {
-				if(handler.HandlesUriType(path)) {
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		public static XeFileInfo[] DirectoryListing(string dir, out Uri pathOut) {
-			Uri path = new Uri(dir);
-			XeFileInfo[] fi = DirectoryListing(ref path);
-			pathOut = path;
-			return fi;
-		}
-		
-		public static XeFileInfo[] DirectoryListing(ref Uri path) {
-			foreach(FileSystemHandler handler in fsHandlers) {
-				if(handler.HandlesUriType(path)) {
-					XeFileInfo[] fi = handler.LoadDirectory(ref path);
-					if(fi == null && !handler.HandlesUriType(path)) return DirectoryListing(ref path);
-					return fi;
-				}
-			}
-			throw new PluginNotFoundException();
-		}
-		
-		public static Uri ParentDirectoryFor(Uri path) {
-			foreach(FileSystemHandler handler in fsHandlers) {
-				if(handler.HandlesUriType(path)) {
-					return handler.ParentDirectory(path);
-				}
-			}
-			throw new PluginNotFoundException();
-		}
 		
 		public static IDisplayInterfaceControl LoadControlInstance() {
 			foreach(DisplayInterfaceHandler handler in dispInterfaceHandlers) {
@@ -181,11 +148,11 @@ namespace Xenon.PluginUtil {
 		}
 		
 		public static bool HasParentDirectory(IDisplayInterfaceControl control) {
-			return ParentDirectoryFor(control.CurrentLocation) != null;
+			return FileSystem.ParentDirectoryFor(control.CurrentLocation) != null;
 		}
 		
 		public static void ParentButtonClicked(IDisplayInterfaceControl control) {
-			Uri path = ParentDirectoryFor(control.CurrentLocation);
+			Uri path = FileSystem.ParentDirectoryFor(control.CurrentLocation);
 			if(path == null) return;
 			LoadDirectory(path, control);
 		}
@@ -198,7 +165,7 @@ namespace Xenon.PluginUtil {
 		}
 		
 		public static bool CanLoadComputer() {
-			return HandlesDirectory(new Uri("about:computer"));
+			return FileSystem.HandlesDirectory(new Uri("about:computer"));
 		}
 		
 		public static void ComputerButtonClicked(IDisplayInterfaceControl control) {
@@ -227,16 +194,22 @@ namespace Xenon.PluginUtil {
 			handler.RequestPaths(delegate(object sender, EventArgs e) {});
 		}
 		
+		public static void LoadFile(string text, IDisplayInterfaceControl control) {
+			if(text == "/") text = "file:///";
+			Uri path = new Uri(text);
+			LoadFile(path, control);
+		}
+		
+		public static void LoadFile(Uri path, IDisplayInterfaceControl control) {
+			if(FileSystem.HandlesDirectory(path)) LoadDirectory(path, control, true);
+			
+			FileSystem.LoadFile(path);
+		}
+		
 		public static void LoadDirectory(string text, IDisplayInterfaceControl control) {
 			if(text == "/") text = "file:///";
 			Uri path = new Uri(text);
 			LoadDirectory(path, control);
-			/*XeFileInfo[] files = DirectoryListing(text, out path);
-			if(files == null || path == null) return;
-			if(control.CurrentLocation != null) control.HistoryBack.Push(control.CurrentLocation);
-			control.CurrentLocation = path;
-			control.SetContent(files, path);*/
-			
 		}
 		
 		public static void LoadDirectory(Uri path, IDisplayInterfaceControl control) {
@@ -244,13 +217,16 @@ namespace Xenon.PluginUtil {
 		}
 		
 		private static void LoadDirectory(Uri path, IDisplayInterfaceControl control, bool handleHistory) {
-			XeFileInfo[] files = DirectoryListing(ref path);
-			if(files == null || path == null) return;
-			if(handleHistory) {
-				if(control.CurrentLocation != null) control.HistoryBack.Push(control.CurrentLocation);
-				control.CurrentLocation = path;
-			}
-			control.SetContent(files, path);
+			Thread thread = new Thread(delegate() {
+				XeFileInfo[] files = FileSystem.DirectoryListing(ref path);
+				if(files == null || path == null) return;
+				if(handleHistory) {
+					if(control.CurrentLocation != null) control.HistoryBack.Push(control.CurrentLocation);
+					control.CurrentLocation = path;
+				}
+				control.SetContent(files, path);
+			});
+			thread.Start();
 		}
 		
 		public static void TabChanged(IDisplayInterfaceControl control) {

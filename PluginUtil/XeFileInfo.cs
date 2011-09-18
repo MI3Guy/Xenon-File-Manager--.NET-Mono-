@@ -16,6 +16,7 @@ namespace Xenon.PluginUtil
 			size = fi.Length;
 			isFile = true;
 			icon = CommonUtil.GetIconForFile(this);
+			ready = true;
 		}
 		
 		public XeFileInfo(DirectoryInfo di) {
@@ -27,8 +28,14 @@ namespace Xenon.PluginUtil
 			size = 0;
 			isFile = false;
 			icon = CommonUtil.GetIconForDirectory(this);
+			ready = true;
 		}
 		
+		public XeFileInfo() {
+			ready = false;
+		}
+		
+		private bool ready;
 		private Uri fullPath;
 		private string name;
 		private DateTime dateCreated;
@@ -38,6 +45,10 @@ namespace Xenon.PluginUtil
 		private FileAttributes attributes;
 		private bool isFile;
 		private object icon;
+		
+		public bool Ready {
+			get { return ready; }
+		}
 		
 		public Uri FullPath {
 			get { return fullPath; }

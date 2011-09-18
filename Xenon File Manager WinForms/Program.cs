@@ -35,6 +35,7 @@ namespace Xenon.FileManager.WinForms {
 			CommonUtil.UIType = PluginUtil.PluginUIType.WinForms;
 			CommonUtil.LoadPlugins();
 			
+			
 			Application.EnableVisualStyles();
 			Application.Run(new MainForm());
 			Process.GetCurrentProcess().Kill();

@@ -78,6 +78,10 @@ namespace Xenon.Plugin.ListDisplayInterfaceWinForms {
 			}
 		}
 		
+		public void NewFolder() {
+			
+		}
+		
 		public void Rename() {
 			
 		}

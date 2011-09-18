@@ -48,6 +48,7 @@
       <Package>gtk-sharp-2.0</Package>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ListDisplayInterfaceGtk.cs" />
