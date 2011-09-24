@@ -147,11 +147,37 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 		public void Rename() {
 			TreePath[] paths = mainTreeView.Selection.GetSelectedRows();
 			if(paths.Length == 1) {
+				TreeIter iter;
+				mainTreeView.Model.GetIter(out iter, paths[0]);
+				XeFileInfo fi = (XeFileInfo)mainTreeView.Model.GetValue(iter, 0);
+				if(fi.Name == ".." || !fi.Ready) return;
 				rend.Editable = true;
 				mainTreeView.SetCursorOnCell(paths[0], col2, rend, true);
 			}
 			else {
 				// TODO: Bulk rename.
+			}
+		}
+		
+		public void Recycle() {
+			TreePath[] paths = mainTreeView.Selection.GetSelectedRows();
+			foreach(TreePath path in paths) {
+				TreeIter iter;
+				mainTreeView.Model.GetIter(out iter, paths[0]);
+				XeFileInfo fi = (XeFileInfo)mainTreeView.Model.GetValue(iter, 0);
+				if(fi.Name == ".." || !fi.Ready) continue;
+				CommonUtil.FileSystem.Recycle(fi.FullPath);
+			}
+		}
+		
+		public void Delete() {
+			TreePath[] paths = mainTreeView.Selection.GetSelectedRows();
+			foreach(TreePath path in paths) {
+				TreeIter iter;
+				mainTreeView.Model.GetIter(out iter, paths[0]);
+				XeFileInfo fi = (XeFileInfo)mainTreeView.Model.GetValue(iter, 0);
+				if(fi.Name == ".." || !fi.Ready) continue;
+				//CommonUtil.FileSystem.Delete(fi.FullPath);
 			}
 		}
 		

@@ -140,12 +140,15 @@ namespace Xenon.FileManager.GtkUI {
 			
 			this.Add(vbox1);
 			
-			this.DeleteEvent += new global::Gtk.DeleteEventHandler(this.OnDeleteEvent);
+			this.DeleteEvent += OnDeleteEvent;
 			locationBar.Activated += new EventHandler(LoadDirectory);
 			nb.SwitchPage += new SwitchPageHandler(OnTabChanged);
 			NewTabAction.Activated += new EventHandler(this.OnNewTabActionActivated);
 			CloseTabAction.Activated += OnCloseTabActionActivated;
 			NewFolderAction.Activated += new EventHandler(this.OnNewFolderActionActivated);
+			RenameAction.Activated += OnRenameActionActivated;
+			DeleteAction.Activated += OnDeleteActionActivated;
+			ExitAction.Activated += OnExitActionActivated;
 			CutAction.Activated += OnCutEvent;
 			CopyAction.Activated += OnCopyEvent;
 			PasteAction.Activated += OnPasteEvent;
@@ -170,6 +173,11 @@ namespace Xenon.FileManager.GtkUI {
 			CommonUtil.HomeButtonClicked((IDisplayInterfaceControl)nb.CurrentPageWidget);
 			while(((IDisplayInterfaceControl)nb.CurrentPageWidget).CurrentLocation == null) Thread.Sleep(100);
 			SetActionStates();
+			
+			
+			progress = new ProgressWindow();
+			progress.IconList = this.IconList;
+			
 			this.ShowAll();
 		}
 		
@@ -188,6 +196,7 @@ namespace Xenon.FileManager.GtkUI {
 		ToolButton cutButton;
 		ToolButton copyButton;
 		ToolButton pasteButton;
+		ProgressWindow progress;
 	
 		protected void OnDeleteEvent(object sender, DeleteEventArgs a) {
 			Application.Quit();
@@ -219,6 +228,18 @@ namespace Xenon.FileManager.GtkUI {
 		
 		protected void OnNewFolderActionActivated(object sender, EventArgs e) {
 			((IDisplayInterfaceControl)nb.CurrentPageWidget).NewFolder();
+		}
+		
+		protected void OnRenameActionActivated(object sender, EventArgs e) {
+			((IDisplayInterfaceControl)nb.CurrentPageWidget).Rename();
+		}
+		
+		protected void OnDeleteActionActivated(object sender, EventArgs e) {
+			((IDisplayInterfaceControl)nb.CurrentPageWidget).Recycle();
+		}
+		
+		protected void OnExitActionActivated(object sender, EventArgs e) {
+			Application.Quit();
 		}
 		
 		protected void OnSelectAllActionActivated(object sender, EventArgs e) {
@@ -305,7 +326,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.";
 		}
 		
 		protected void OnPasteEvent(object sender, EventArgs e) {
-			CommonUtil.PasteButtonClicked((IDisplayInterfaceControl)nb.CurrentPageWidget);
+			CommonUtil.PasteButtonClicked((IDisplayInterfaceControl)nb.CurrentPageWidget, new GtkFileOperationProgress(progress));
 		}
 		
 		

@@ -59,6 +59,7 @@
     <Compile Include="..\bin\Debug\PluginNotFoundException.cs" />
     <Compile Include="..\bin\Debug\XeErrorHandler.cs" />
     <Compile Include="..\bin\Debug\CommonUtil.FileSystem.cs" />
+    <Compile Include="..\bin\Debug\IFileOperationProgress.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -86,6 +86,14 @@ namespace Xenon.Plugin.ListDisplayInterfaceWinForms {
 			
 		}
 		
+		public void Recycle() {
+			
+		}
+		
+		public void Delete() {
+			
+		}
+		
 		public void SelectAll() {
 			foreach(ListViewItem lvi in lv.Items) {
 				if(lvi.Text == "..") continue;

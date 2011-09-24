@@ -179,19 +179,29 @@ namespace Xenon.PluginUtil {
 		public static void CutButtonClicked(IDisplayInterfaceControl control) {
 			ClipboardHandler handler = PrimaryClipboardHandler;
 			if(handler == null) return;
-			handler.ExposePaths(new ClipboardData(from file in control.SelectedFiles select file.FullPath, OperationType.Cut));
+			handler.ExposePaths(new ClipboardData(from file in control.SelectedFiles select file.FullPath, ClipboardOperationType.Cut));
 		}
 		
 		public static void CopyButtonClicked(IDisplayInterfaceControl control) {
 			ClipboardHandler handler = PrimaryClipboardHandler;
 			if(handler == null) return;
-			handler.ExposePaths(new ClipboardData(from file in control.SelectedFiles select file.FullPath, OperationType.Copy));
+			handler.ExposePaths(new ClipboardData(from file in control.SelectedFiles select file.FullPath, ClipboardOperationType.Copy));
 		}
 		
-		public static void PasteButtonClicked(IDisplayInterfaceControl control) {
+		public static void PasteButtonClicked(IDisplayInterfaceControl control, IFileOperationProgress progress) {
 			ClipboardHandler handler = PrimaryClipboardHandler;
 			if(handler == null) return;
-			handler.RequestPaths(delegate(object sender, EventArgs e) {});
+			handler.RequestPaths(delegate(object sender, EventArgs e) {
+				ClipboardData data = handler.PastePaths();
+				switch(data.Operation) {
+					case ClipboardOperationType.Copy:
+						FileSystem.CopyAsync(data.Paths.ToArray(), (from path in data.Paths select new Uri(control.CurrentLocation, Path.GetFileName(path.AbsolutePath.TrimEnd('\\', '/')))).ToArray(), progress);
+						break;
+					
+					case ClipboardOperationType.Cut:
+						break;
+				}
+			});
 		}
 		
 		public static void LoadFile(string text, IDisplayInterfaceControl control) {

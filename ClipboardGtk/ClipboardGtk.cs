@@ -38,7 +38,7 @@ namespace Xenon.Plugin.ClipboardGtk {
 			string temp = Encoding.ASCII.GetString(selection.Data);
 			if (temp==null) return;
 			
-			string[] items = temp.Split();
+			string[] items = temp.Split('\n', '\r');
 			List<Uri> paths = new List<Uri>(items.Length);
 			for(int i = 1; i < items.Length; ++i) {
 				if(items[i] == string.Empty) continue;
@@ -46,7 +46,7 @@ namespace Xenon.Plugin.ClipboardGtk {
 				paths.Add(fileFrom);
 			}
 			
-			inData = new ClipboardData(paths, items[0] == "cut" ? OperationType.Cut : OperationType.Copy);
+			inData = new ClipboardData(paths, items[0] == "cut" ? ClipboardOperationType.Cut : ClipboardOperationType.Copy);
 			evt(null, null);
 		}
 		
@@ -58,7 +58,7 @@ namespace Xenon.Plugin.ClipboardGtk {
 		
 		private void ClearGet(Gtk.Clipboard clipboard, Gtk.SelectionData selection, uint info) {
 	        StringBuilder temp = new StringBuilder();
-			temp.Append(outData.Operation == OperationType.Cut ? "cut" : "copy");
+			temp.Append(outData.Operation == ClipboardOperationType.Cut ? "cut" : "copy");
 			foreach(Uri path in outData.Paths) {
 				temp.Append('\n');
 				temp.Append(path.ToString());
@@ -67,7 +67,7 @@ namespace Xenon.Plugin.ClipboardGtk {
 	    }
 	
 	    private void ClearFunc(Gtk.Clipboard clipboard) {
-	        outData = null;
+	        //outData = null;
 	    }
 		
 	}

@@ -12,6 +12,8 @@ namespace Xenon.PluginUtil
 		IEnumerable<XeFileInfo> SelectedFiles { get; }
 		void NewFolder();
 		void Rename();
+		void Recycle();
+		void Delete();
 		void SelectAll();
 		void SelectNone();
 	}

@@ -27,6 +27,15 @@ namespace Xenon.PluginUtil {
 			throw new NotImplementedException();
 		}
 		
+		public virtual void CopyAsync(Uri[] src, Uri[] dest, IFileOperationProgress progress) {
+			if(src.Length != dest.Length) throw new ArgumentException();
+			for(int i = 0; i < src.Length; ++i) {
+				progress.UpdateProgress(i + 1, src.Length, (double)i/(double)src.Length);
+				Copy(src[i], dest[i]);
+			}
+			progress.Finish();
+		}
+		
 		public virtual void Copy(Uri src, Uri dest) {
 			throw new NotImplementedException();
 		}

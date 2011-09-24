@@ -32,9 +32,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="Send2Trash.NET, Version=1.0.4277.15392, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="Send2Trash.NET, Version=1.0.4278.20154, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libraries\Send2Trash.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="gnome-vfs-sharp, Version=2.24.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gnome-vfs-sharp-2.0</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>

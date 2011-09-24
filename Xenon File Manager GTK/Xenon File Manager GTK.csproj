@@ -68,7 +68,8 @@
     <Compile Include="TabLabel.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="SettingsDialog.cs" />
-    <Compile Include="ProgessWindow.cs" />
+    <Compile Include="ProgressWindow.cs" />
+    <Compile Include="GtkFileOperationProgress.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -17,6 +17,12 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 			return true;
 		}
 		
+		public override void InitPlugin() {
+			if(OS == PluginOSType.Unix) {
+				Gnome.Vfs.Vfs.Initialize();
+			}
+		}
+		
 		PluginOSType OS;
 		
 		public override bool HandlesUriType(Uri uri) {
@@ -52,12 +58,22 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 			}
 			int i = extra;
 			for(int j = 0; j < di2.Length; ++j, ++i) {
-				fi2[i] = new XeFileInfo(di2[j]);
+				try {
+					fi2[i] = new XeFileInfo(di2[j]);
+				}
+				catch {
+
+				}
 			}
 			for(int j = 0; j < fi.Length; ++j, ++i) {
-				fi2[i] = new XeFileInfo(fi[j]);
+				try {
+					fi2[i] = new XeFileInfo(fi[j]);
+				}
+				catch {
+					
+				}
 			}
-			return fi2;
+			return (from fival in fi2 where fival != null select fival).ToArray();
 		}
 		
 		public override bool Exists(Uri uri) {
@@ -77,6 +93,63 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 		
 		public override void CreateDirectory(Uri path) {
 			Directory.CreateDirectory(path.GetScrubbedLocalPath());
+		}
+		
+		public override void CopyAsync(Uri[] src, Uri[] dest, IFileOperationProgress progress) {
+			if(OS == PluginOSType.Windows) {
+				//FileSystem.CopyDirectory(
+			}
+			else if(OS == PluginOSType.Unix) {
+				Gnome.Vfs.Uri[] src2 = (from uri in src select new Gnome.Vfs.Uri(Gnome.Vfs.Uri.GetUriFromLocalPath(uri.GetScrubbedLocalPath()))).ToArray();
+				Gnome.Vfs.Uri[] dest2 = (from uri in dest select new Gnome.Vfs.Uri(Gnome.Vfs.Uri.GetUriFromLocalPath(uri.GetScrubbedLocalPath()))).ToArray();
+				Gnome.Vfs.Xfer.XferUriList(src2,
+			                           dest2,
+			                           Gnome.Vfs.XferOptions.Recursive, Gnome.Vfs.XferErrorMode.Query, Gnome.Vfs.XferOverwriteMode.Query,
+			                           delegate(Gnome.Vfs.XferProgressInfo info) {
+					switch(info.Status) {
+						case Gnome.Vfs.XferProgressStatus.Ok:
+							progress.UpdateProgress((int)info.FileIndex + 1, (int)info.FilesTotal, (double)info.TotalBytesCopied/(double)info.BytesTotal);
+							return 1;
+						case Gnome.Vfs.XferProgressStatus.Vfserror:
+							Console.WriteLine(info.VfsStatus.ToString());
+							switch(progress.OnError(null, null)) {
+								case FileErrorAction.Abort:
+									return (int)Gnome.Vfs.XferErrorAction.Abort;
+								case FileErrorAction.Retry:
+									return (int)Gnome.Vfs.XferErrorAction.Retry;
+								case FileErrorAction.Ignore:
+									return (int)Gnome.Vfs.XferErrorAction.Skip;
+							}
+							return (int)Gnome.Vfs.XferErrorAction.Abort;
+						case Gnome.Vfs.XferProgressStatus.Overwrite:
+							bool applytoall;
+							bool? overwrite = progress.OnOverwrite(new Uri(info.SourceName), new Uri(info.TargetName), out applytoall);
+							if(overwrite == null) return (int)Gnome.Vfs.XferOverwriteAction.Abort;
+							if((bool)overwrite) {
+								if(applytoall) {
+									return (int)Gnome.Vfs.XferOverwriteAction.ReplaceAll;
+								}
+								else {
+									return (int)Gnome.Vfs.XferOverwriteAction.Replace;
+								}
+							}
+							else {
+								if(applytoall) {
+									return (int)Gnome.Vfs.XferOverwriteAction.SkipAll;
+								}
+								else {
+									return (int)Gnome.Vfs.XferOverwriteAction.Skip;
+								}
+							}
+					}
+					return 0;
+				});
+				progress.Finish();
+			}
+			else {
+				base.CopyAsync(src, dest, progress);
+			
+			}
 		}
 		
 		public override void Copy(Uri src, Uri dest) {
