@@ -179,13 +179,15 @@ namespace Xenon.PluginUtil {
 		public static void CutButtonClicked(IDisplayInterfaceControl control) {
 			ClipboardHandler handler = PrimaryClipboardHandler;
 			if(handler == null) return;
-			handler.ExposePaths(new ClipboardData(from file in control.SelectedFiles select file.FullPath, ClipboardOperationType.Cut));
+			IEnumerable<XeFileInfo> files = control.SelectedFiles;
+			if(files.Count() > 0) handler.ExposePaths(new ClipboardData(from file in files select file.FullPath, ClipboardOperationType.Cut));
 		}
 		
 		public static void CopyButtonClicked(IDisplayInterfaceControl control) {
 			ClipboardHandler handler = PrimaryClipboardHandler;
 			if(handler == null) return;
-			handler.ExposePaths(new ClipboardData(from file in control.SelectedFiles select file.FullPath, ClipboardOperationType.Copy));
+			IEnumerable<XeFileInfo> files = control.SelectedFiles;
+			if(files.Count() > 0) handler.ExposePaths(new ClipboardData(from file in files select file.FullPath, ClipboardOperationType.Copy));
 		}
 		
 		public static void PasteButtonClicked(IDisplayInterfaceControl control, IFileOperationProgress progress) {
@@ -193,13 +195,15 @@ namespace Xenon.PluginUtil {
 			if(handler == null) return;
 			handler.RequestPaths(delegate(object sender, EventArgs e) {
 				ClipboardData data = handler.PastePaths();
-				switch(data.Operation) {
-					case ClipboardOperationType.Copy:
-						FileSystem.CopyAsync(data.Paths.ToArray(), (from path in data.Paths select new Uri(control.CurrentLocation, Path.GetFileName(path.AbsolutePath.TrimEnd('\\', '/')))).ToArray(), progress);
-						break;
-					
-					case ClipboardOperationType.Cut:
-						break;
+				if(data.Paths.Count > 0) {
+					switch(data.Operation) {
+						case ClipboardOperationType.Copy:
+							FileSystem.CopyAsync(data.Paths.ToArray(), (from uri in data.Paths select FileSystem.CopyOperationDestination(uri, control.CurrentLocation)).ToArray(), progress);
+							break;
+						
+						case ClipboardOperationType.Cut:
+							break;
+					}
 				}
 			});
 		}

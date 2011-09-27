@@ -31,7 +31,8 @@ namespace Xenon.FileManager.GtkUI {
 		
 		private ProgressWindow progress;
 		
-		public Widget DisplayWidget { get; set; }
+		public ProgressBar DisplayWidget { get; set; }
+		public Label Label { get; set; }
 		public Adjustment Adjustment { get; set; }
 		
 		public FileOperationType Operation {
@@ -43,10 +44,9 @@ namespace Xenon.FileManager.GtkUI {
 			progress.AddOperation(this);
 		}
 		
-		public void UpdateProgress(int current, int max, double proportion) {
+		public void UpdateProgress(int current, int max, double proportion, double? bitrate, TimeSpan? etr) {
 			Application.Invoke(delegate(object sender, EventArgs e) {
-				Adjustment.Value = 500.0*proportion;
-				Adjustment.Upper = 500.0;
+				progress.ProgressUpdate(this, current, max, proportion, bitrate, etr);
 			});
 		}
 		

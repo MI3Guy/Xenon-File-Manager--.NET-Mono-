@@ -26,7 +26,7 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 		PluginOSType OS;
 		
 		public override bool HandlesUriType(Uri uri) {
-			return Exists(uri);
+			return uri.IsFile;
 		}
 		
 		public override bool LoadsUriType(Uri uri) {
@@ -39,6 +39,11 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 		
 		public override Uri ParentDirectory(Uri uri) {
 			return new Uri("file://" + Path.Combine(uri.GetScrubbedLocalPath(), ".."));
+		}
+		
+		public override string[] FileName(Uri uri) {
+			string path = uri.GetScrubbedLocalPath();
+			return new string[] { Path.GetFileName(path), Path.GetFileNameWithoutExtension(path), Path.GetExtension(path) };
 		}
 		
 		public override XeFileInfo[] LoadDirectory(ref Uri uri) {
@@ -100,6 +105,9 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 				//FileSystem.CopyDirectory(
 			}
 			else if(OS == PluginOSType.Unix) {
+				long? prev;
+				DateTime? prevTime;
+				
 				Gnome.Vfs.Uri[] src2 = (from uri in src select new Gnome.Vfs.Uri(Gnome.Vfs.Uri.GetUriFromLocalPath(uri.GetScrubbedLocalPath()))).ToArray();
 				Gnome.Vfs.Uri[] dest2 = (from uri in dest select new Gnome.Vfs.Uri(Gnome.Vfs.Uri.GetUriFromLocalPath(uri.GetScrubbedLocalPath()))).ToArray();
 				Gnome.Vfs.Xfer.XferUriList(src2,
@@ -108,7 +116,19 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 			                           delegate(Gnome.Vfs.XferProgressInfo info) {
 					switch(info.Status) {
 						case Gnome.Vfs.XferProgressStatus.Ok:
-							progress.UpdateProgress((int)info.FileIndex + 1, (int)info.FilesTotal, (double)info.TotalBytesCopied/(double)info.BytesTotal);
+							double? bitrate;
+							TimeSpan? etr;
+							DateTime time = DateTime.Now;
+							if(prev != null && prevTime != null) {
+								double sec = (time - (DateTime)prevTime).TotalSeconds;
+								bitrate = ((double)info.TotalBytesCopied - (double)prev) / sec;
+								try { etr = TimeSpan.FromSeconds((info.BytesTotal - info.TotalBytesCopied)/(double)bitrate); }
+								catch {}
+							}
+							prev = info.TotalBytesCopied;
+							prevTime = time;
+							
+							progress.UpdateProgress((int)info.FileIndex, 0, (double)info.TotalBytesCopied/(double)info.BytesTotal, bitrate, etr);
 							return 1;
 						case Gnome.Vfs.XferProgressStatus.Vfserror:
 							Console.WriteLine(info.VfsStatus.ToString());

@@ -8,6 +8,7 @@ namespace Xenon.PluginUtil {
 		public virtual bool LoadsUriType(Uri uri) { return HandlesUriType(uri); }
 		public abstract Uri Combine(Uri uri, string addition);
 		public abstract Uri ParentDirectory(Uri uri);
+		public abstract string[] FileName(Uri uri);
 		public abstract XeFileInfo[] LoadDirectory(ref Uri uri);
 		public abstract bool Exists(Uri uri);
 		
@@ -30,7 +31,7 @@ namespace Xenon.PluginUtil {
 		public virtual void CopyAsync(Uri[] src, Uri[] dest, IFileOperationProgress progress) {
 			if(src.Length != dest.Length) throw new ArgumentException();
 			for(int i = 0; i < src.Length; ++i) {
-				progress.UpdateProgress(i + 1, src.Length, (double)i/(double)src.Length);
+				progress.UpdateProgress(i + 1, src.Length, (double)i/(double)src.Length, null, null);
 				Copy(src[i], dest[i]);
 			}
 			progress.Finish();

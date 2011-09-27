@@ -24,6 +24,10 @@ namespace Xenon.Plugin.AboutFileSystemHandler {
 			return null;
 		}
 		
+		public override string[] FileName(Uri uri) {
+			return null;
+		}
+		
 		public override XeFileInfo[] LoadDirectory(ref Uri uri) {
 			if(!HandlesUriType(uri)) throw new ArgumentException();
 			

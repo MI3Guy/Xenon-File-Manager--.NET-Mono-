@@ -56,25 +56,30 @@ namespace Xenon.FileManager.GtkUI {
 					break;
 			}
 			
-			return string.Format(Catalog.GetPluralString("{0} {1} of {2} file/folder", "{0} {1} of {2} files/folders", max), typestr, current + 1, max);
+			if(max == 0) return string.Format(Catalog.GetString("{0} file/folder #{1}"), typestr, current);
+			return string.Format(Catalog.GetPluralString("{0} {1} of {2} files/folders", "{0} file/folder", max), typestr, current, max);
 		}
 		
 		public void AddOperation(GtkFileOperationProgress progress) {
 			VBox subvbox = new VBox();
-			subvbox.PackStart(new Label(), false, false, 0);
+			Label lbl = new Label();
+			subvbox.PackStart(lbl, false, false, 0);
 			ProgressBar bar = new ProgressBar();
-			bar.Adjustment = new Adjustment(0.0, 0.0, 1.0, 1.0, 1.0, 1.0);
+			bar.Adjustment = new Adjustment(0.0, 0.0, 500.0, 1.0, 1.0, 1.0);
 			subvbox.PackStart(bar, true, true, 0);
 			vbox.PackStart(subvbox, false, true, 0);
 			subvbox.ShowAll();
 			
-			progress.DisplayWidget = subvbox;
+			progress.DisplayWidget = bar;
+			progress.Label = lbl;
 			progress.Adjustment = bar.Adjustment;
 			this.ShowAll();
 		}
 		
-		public void ProgressUpdate(GtkFileOperationProgress progress) {
-			
+		public void ProgressUpdate(GtkFileOperationProgress progress, int current, int max, double proportion, double? bitrate, TimeSpan? etr) {
+			progress.Adjustment.Value = 500.0 * proportion;
+			progress.Label.Text = FormatLabel(progress.Operation, current, max);
+			progress.DisplayWidget.Text = bitrate != null ? string.Format(Catalog.GetString("{0} Remaining"), etr) : null;
 		}
 		
 		public void Finish(GtkFileOperationProgress progress) {
