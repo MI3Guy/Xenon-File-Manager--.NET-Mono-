@@ -9,7 +9,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>PluginUtil</RootNamespace>
     <AssemblyName>PluginUtil</AssemblyName>
-    <BaseDirectory>..\bin\Debug</BaseDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,11 +55,11 @@
     <Compile Include="CacheHash.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="CommonUtil.cs" />
-    <Compile Include="..\bin\Debug\ClipboardData.cs" />
-    <Compile Include="..\bin\Debug\PluginNotFoundException.cs" />
-    <Compile Include="..\bin\Debug\XeErrorHandler.cs" />
-    <Compile Include="..\bin\Debug\CommonUtil.FileSystem.cs" />
-    <Compile Include="..\bin\Debug\IFileOperationProgress.cs" />
+    <Compile Include="ClipboardData.cs" />
+    <Compile Include="CommonUtil.FileSystem.cs" />
+    <Compile Include="IFileOperationProgress.cs" />
+    <Compile Include="PluginNotFoundException.cs" />
+    <Compile Include="XeErrorHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
