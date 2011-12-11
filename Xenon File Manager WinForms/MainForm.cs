@@ -96,8 +96,8 @@ namespace Xenon.FileManager.WinForms {
 			
 			//SetActionStates();
 			
-			((TabPage)e.Control).Text = e.DisplayPath;
-			locationBar.Text = e.FullPath;
+			((TabPage)e.Control).Text = e.ShortPath;
+			locationBar.Text = e.DisplayPath;
 		}
 	}
 }

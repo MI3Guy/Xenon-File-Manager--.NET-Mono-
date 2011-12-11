@@ -12,6 +12,17 @@ namespace Xenon.PluginUtil {
 		public abstract XeFileInfo[] LoadDirectory(ref Uri uri);
 		public abstract bool Exists(Uri uri);
 		
+		public virtual string DisplayPath(Uri uri) {
+			return uri.PathAndQuery;
+		}
+		public virtual string ShortPath(Uri uri) {
+			return uri.AbsolutePath;
+			
+		}
+		
+		
+		
+		
 		public virtual void LoadFile(Uri path) {
 			throw new NotImplementedException();
 		}

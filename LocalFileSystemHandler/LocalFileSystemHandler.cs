@@ -46,6 +46,23 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 			return new string[] { Path.GetFileName(path), Path.GetFileNameWithoutExtension(path), Path.GetExtension(path) };
 		}
 		
+		public override string DisplayPath (Uri uri) {
+			return uri.GetScrubbedLocalPath();
+		}
+		
+		public override string ShortPath (Uri uri) {
+			string txt = uri.GetScrubbedLocalPath();
+			if(System.IO.Path.GetFileName(txt) == string.Empty) {
+				string tmptxt = System.IO.Path.GetDirectoryName(txt);
+				
+				if(tmptxt == null) {
+					return txt;
+				}
+				txt = tmptxt;
+			}
+			return System.IO.Path.GetFileName(txt);
+		}
+		
 		public override XeFileInfo[] LoadDirectory(ref Uri uri) {
 			if(!LoadsUriType(uri)) throw new ArgumentException();
 			//System.Threading.Thread.Sleep(1000);
@@ -105,8 +122,8 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 				//FileSystem.CopyDirectory(
 			}
 			else if(OS == PluginOSType.Unix) {
-				long? prev;
-				DateTime? prevTime;
+				long? prev = null;
+				DateTime? prevTime = null;
 				
 				Gnome.Vfs.Uri[] src2 = (from uri in src select new Gnome.Vfs.Uri(Gnome.Vfs.Uri.GetUriFromLocalPath(uri.GetScrubbedLocalPath()))).ToArray();
 				Gnome.Vfs.Uri[] dest2 = (from uri in dest select new Gnome.Vfs.Uri(Gnome.Vfs.Uri.GetUriFromLocalPath(uri.GetScrubbedLocalPath()))).ToArray();
@@ -116,8 +133,8 @@ namespace Xenon.Plugin.LocalFileSystemHandler
 			                           delegate(Gnome.Vfs.XferProgressInfo info) {
 					switch(info.Status) {
 						case Gnome.Vfs.XferProgressStatus.Ok:
-							double? bitrate;
-							TimeSpan? etr;
+							double? bitrate = null;
+							TimeSpan? etr = null;
 							DateTime time = DateTime.Now;
 							if(prev != null && prevTime != null) {
 								double sec = (time - (DateTime)prevTime).TotalSeconds;

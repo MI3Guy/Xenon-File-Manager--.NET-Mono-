@@ -331,8 +331,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.";
 		
 		
 		protected void OnDirectoryChanged(object sender, DirectoryChangedEventArgs e) {
-			((TabLabel)nb.GetTabLabel((Widget)e.Control)).TextLabel.Text = e.DisplayPath;
-			locationBar.Text = e.FullPath;
+			((TabLabel)nb.GetTabLabel((Widget)e.Control)).TextLabel.Text = e.ShortPath;
+			locationBar.Text = e.DisplayPath;
 			
 			SetActionStates();
 			IDisplayInterfaceControl[] controls = new IDisplayInterfaceControl[nb.NPages];

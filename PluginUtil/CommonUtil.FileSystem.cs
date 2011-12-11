@@ -103,6 +103,24 @@ namespace Xenon.PluginUtil {
 				throw new PluginNotFoundException();
 			}
 			
+			public static string DisplayPath(Uri path) {
+				foreach(FileSystemHandler handler in fsHandlers) {
+					if(handler.HandlesUriType(path)) {
+						return handler.DisplayPath(path);
+					}
+				}
+				throw new PluginNotFoundException();
+			}
+			
+			public static string ShortPath(Uri path) {
+				foreach(FileSystemHandler handler in fsHandlers) {
+					if(handler.HandlesUriType(path)) {
+						return handler.ShortPath(path);
+					}
+				}
+				throw new PluginNotFoundException();
+			}
+			
 			public static void CreateDirectory(Uri path) {
 				Uri parent = new Uri(path, "..");
 				foreach(FileSystemHandler handler in CommonUtil.fsHandlers) {

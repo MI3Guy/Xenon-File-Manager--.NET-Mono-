@@ -42,8 +42,13 @@ namespace Xenon.PluginUtil {
 			//MainSettings.Add("home", new Uri("file:///home/john"));
 			//MainSettings.Add("home", new SettingEntry { data = new Uri(Environment.GetFolderPath(Environment.SpecialFolder.Personal)), writetofile = false });
 
-			LoadSettings();
-			
+			try {
+				LoadSettings();
+			}
+			catch(FileNotFoundException) {
+				
+			}
+				
 			foreach(ConstSettingEntry entry in ValidSettings) {
 				if(MainSettings.ContainsKey(entry.name)) continue;
 				MainSettings.Add(entry.name, DefaultSetting(entry.name));

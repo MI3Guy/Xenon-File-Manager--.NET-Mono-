@@ -163,7 +163,7 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 			TreePath[] paths = mainTreeView.Selection.GetSelectedRows();
 			foreach(TreePath path in paths) {
 				TreeIter iter;
-				mainTreeView.Model.GetIter(out iter, paths[0]);
+				mainTreeView.Model.GetIter(out iter, path);
 				XeFileInfo fi = (XeFileInfo)mainTreeView.Model.GetValue(iter, 0);
 				if(fi.Name == ".." || !fi.Ready) continue;
 				CommonUtil.FileSystem.Recycle(fi.FullPath);
@@ -174,7 +174,7 @@ namespace Xenon.Plugin.ListDisplayInterfaceGtk {
 			TreePath[] paths = mainTreeView.Selection.GetSelectedRows();
 			foreach(TreePath path in paths) {
 				TreeIter iter;
-				mainTreeView.Model.GetIter(out iter, paths[0]);
+				mainTreeView.Model.GetIter(out iter, path);
 				XeFileInfo fi = (XeFileInfo)mainTreeView.Model.GetValue(iter, 0);
 				if(fi.Name == ".." || !fi.Ready) continue;
 				//CommonUtil.FileSystem.Delete(fi.FullPath);
